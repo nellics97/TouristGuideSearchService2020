@@ -20,6 +20,12 @@ router.post(
   eventsControllers.createEvent
 );
 
+router.patch(
+  "/:eid",
+  [check("title").not().isEmpty(), check("description").isLength({ min: 5 })],
+  eventsControllers.updateEvent
+);
+
 router.delete("/:eid", eventsControllers.deleteEvent);
 
 module.exports = router;

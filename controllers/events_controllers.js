@@ -123,15 +123,15 @@ const updateEvent = async (req, res, next) => {
     );
   }
 
-  const { title, place, description, attendees } = req.body;
+  const { title, place, description, attendees, creator } = req.body;
   const eventId = req.params.eid;
 
   let event;
   try {
-    event = await Event.EventfindById(eventId);
+    event = await Event.findById(eventId);
   } catch (err) {
     const error = new HttpError(
-      "Something went wrong, could not update event.",
+      "Something went wrong, could not update event.1  " + eventId,
       500
     );
     return next(error);
@@ -141,12 +141,13 @@ const updateEvent = async (req, res, next) => {
   event.description = description;
   event.place = place;
   event.attendees = attendees;
+  event.creator.push(creator);
 
   try {
     await event.save();
   } catch (err) {
     const error = new HttpError(
-      "Something went wrong, could not update event.",
+      "Something went wrong, could not update event.2",
       500
     );
     return next(error);
