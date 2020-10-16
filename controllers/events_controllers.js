@@ -156,6 +156,31 @@ const updateEvent = async (req, res, next) => {
   res.status(200).json({ event: event.toObject({ getters: true }) });
 };
 
+const getAttendeesById = async (req, res, next) => {
+  const eventId = req.params.eid;
+
+  let attendingUser;
+  try {
+    attendingUser = await Event.findById(eventId).populate("creator");
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not find a place.",
+      500
+    );
+    return next(error);
+  }
+
+  if (!attendingUser) {
+    const error = new HttpError(
+      "Could not find user for the provided id. ",
+      404
+    );
+    return next(error);
+  }
+
+  res.json({ attendingUser: attendingUser.toObject({ getters: true }) });
+};
+
 const deleteEvent = async (req, res, next) => {
   const eventId = req.params.eid;
 
@@ -197,4 +222,5 @@ exports.getEventById = getEventById;
 exports.getEventsByUserId = getEventsByUserId;
 exports.createEvent = createEvent;
 exports.updateEvent = updateEvent;
+exports.getAttendeesById = getAttendeesById;
 exports.deleteEvent = deleteEvent;

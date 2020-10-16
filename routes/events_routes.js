@@ -9,6 +9,8 @@ router.get("/:eid", eventsControllers.getEventById);
 
 router.get("/user/:uid", eventsControllers.getEventsByUserId);
 
+router.get("/:eid/users", eventsControllers.getAttendeesById);
+
 router.post(
   "/",
   [
