@@ -28,6 +28,8 @@ router.patch(
   eventsControllers.updateEvent
 );
 
+router.patch("/:eid/addattendee", eventsControllers.addNewAttendee);
+
 router.delete("/:eid", eventsControllers.deleteEvent);
 
 module.exports = router;
