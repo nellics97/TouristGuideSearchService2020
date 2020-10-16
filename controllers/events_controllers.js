@@ -1,5 +1,6 @@
 const uuid = require("uuid");
 const { validationResult } = require("express-validator");
+const mongoose = require("mongoose");
 
 const HttpError = require("../models/http-error");
 const Event = require("../models/event");
@@ -28,15 +29,15 @@ const getEventById = async (req, res, next) => {
     return next(error);
   }
 
-  res.json({ place: event.toObject({ getters: true }) });
+  res.json({ event: event.toObject({ getters: true }) });
 };
 
 const getEventsByUserId = async (req, res, next) => {
   const userId = req.params.uid;
 
-  let events;
+  let userWithEvents;
   try {
-    events = await Event.find({ creator: userId });
+    userWithEvents = await User.findById(userId).populate("events");
   } catch (err) {
     const error = new HttpError(
       "Fetching events failed, please try again later",
@@ -45,14 +46,16 @@ const getEventsByUserId = async (req, res, next) => {
     return next(error);
   }
 
-  if (!events || events.length === 0) {
+  if (!userWithEvents || userWithEvents.events.length === 0) {
     return next(
       new HttpError("Could not find events for the provided user id.", 404)
     );
   }
 
   res.json({
-    events: events.map((event) => event.toObject({ getters: true })),
+    events: userWithEvents.events.map((event) =>
+      event.toObject({ getters: true })
+    ),
   });
 };
 
@@ -64,7 +67,7 @@ const createEvent = async (req, res, next) => {
     );
   }
 
-  const { title, place, description, attendees } = req.body;
+  const { title, place, description, attendees, creator } = req.body;
 
   // const title = req.body.title;
   const createdEvent = new Event({
@@ -73,7 +76,6 @@ const createEvent = async (req, res, next) => {
     description,
     attendees,
     creator,
-    attendingUsers: [],
   });
 
   let user;
@@ -93,8 +95,15 @@ const createEvent = async (req, res, next) => {
     return next(error);
   }
 
+  console.log(user);
+
   try {
-    await createdEvent.save();
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await createdEvent.save({ session: sess });
+    user.events.push(createdEvent);
+    await user.save({ session: sess });
+    await sess.commitTransaction();
   } catch (err) {
     const error = new HttpError(
       "Creating event failed, please try again.",
@@ -119,7 +128,7 @@ const updateEvent = async (req, res, next) => {
 
   let event;
   try {
-    event = await EventfindById(eventId);
+    event = await Event.EventfindById(eventId);
   } catch (err) {
     const error = new HttpError(
       "Something went wrong, could not update event.",
@@ -151,7 +160,7 @@ const deleteEvent = async (req, res, next) => {
 
   let event;
   try {
-    event = await Event.findById(eventId);
+    event = await Event.findById(eventId).populate("creator");
   } catch (err) {
     const error = new HttpError(
       "Something went wrong, could not delete event.",
@@ -160,11 +169,21 @@ const deleteEvent = async (req, res, next) => {
     return next(error);
   }
 
+  if (!event) {
+    const error = new HttpError("Couldn't find event for this id", 404);
+    return next(error);
+  }
+
   try {
-    await event.remove();
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await event.remove({ session: sess });
+    event.creator.events.pull(event);
+    await event.creator.save({ session: sess });
+    await sess.commitTransaction();
   } catch (err) {
     const error = new HttpError(
-      "Something went wrong, could not delete place.",
+      "Something went wrong, could not delete event.",
       500
     );
     return next(error);
