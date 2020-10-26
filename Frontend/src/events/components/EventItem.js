@@ -1,6 +1,7 @@
 import React from "react";
 
 import Card from "../../shared/components/UIElements/Card";
+import Button from "../../shared/components/FormElements/Button";
 import "./EventItem.css";
 
 const EventItem = (props) => {
@@ -15,9 +16,9 @@ const EventItem = (props) => {
           <h3>{props.creator}</h3>
         </div>
         <div className="event-item__actions">
-          <button>Apply</button>
-          <button>Edit</button>
-          <button>Delete</button>
+          <Button>Apply</Button>
+          <Button to={`events/&{props.id}}`}>Edit</Button>
+          <Button danger>Delete</Button>
         </div>
       </Card>
     </li>
