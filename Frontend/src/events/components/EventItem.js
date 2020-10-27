@@ -17,7 +17,7 @@ const EventItem = (props) => {
         </div>
         <div className="event-item__actions">
           <Button>Apply</Button>
-          <Button to={`events/&{props.id}}`}>Edit</Button>
+          <Button to={`/events/${props.id}`}>Edit</Button>
           <Button danger>Delete</Button>
         </div>
       </Card>

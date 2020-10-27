@@ -9,6 +9,7 @@ import {
 import Users from "./user/pages/Users";
 import NewEvent from "./events/pages/NewEvent";
 import Events from "./events/pages/Events";
+import UpdateEvent from "./events/pages/UpdateEvent";
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
 
 function App() {
@@ -25,6 +26,9 @@ function App() {
           </Route>
           <Route path="/events/new" exact>
             <NewEvent />
+          </Route>
+          <Route path="/events/:eventId">
+            <UpdateEvent />
           </Route>
           <Redirect to="/" />
         </Switch>
