@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
+import Card from "../../shared/components/UIElements/Card";
 import {
   VALIDATOR_REQUIRE,
   VALIDATOR_MINLENGTH,
@@ -30,31 +31,59 @@ const DUMMY_EVENTS = [
 ];
 
 const UpdateEvent = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const eventId = useParams().eventId;
+
+  const [formState, inputHandler, setFormData] = useForm(
+    {
+      title: {
+        value: "",
+        isValid: false,
+      },
+      place: {
+        value: "",
+        isValid: false,
+      },
+      description: {
+        value: "",
+        isValid: false,
+      },
+      attendees: {
+        value: "",
+        isValid: false,
+      },
+    },
+    false
+  );
 
   const identifiedEvent = DUMMY_EVENTS.find((e) => e.id === eventId);
 
-  const [formState, inputHandler] = useForm(
-    {
-      title: {
-        value: identifiedEvent.title,
-        isValid: true,
-      },
-      place: {
-        value: identifiedEvent.place,
-        isValid: true,
-      },
-      description: {
-        value: identifiedEvent.description,
-        isValid: true,
-      },
-      attendees: {
-        value: identifiedEvent.attendees,
-        isValid: true,
-      },
-    },
-    true
-  );
+  useEffect(() => {
+    if (identifiedEvent) {
+      setFormData(
+        {
+          title: {
+            value: identifiedEvent.title,
+            isValid: true,
+          },
+          place: {
+            value: identifiedEvent.place,
+            isValid: true,
+          },
+          description: {
+            value: identifiedEvent.description,
+            isValid: true,
+          },
+          attendees: {
+            value: identifiedEvent.attendees,
+            isValid: true,
+          },
+        },
+        true
+      );
+    }
+    setIsLoading(false);
+  }, [setFormData, identifiedEvent]);
 
   const eventUpdateSubmitHandler = (event) => {
     event.preventDefault();
@@ -64,7 +93,17 @@ const UpdateEvent = () => {
   if (!identifiedEvent) {
     return (
       <div className="center">
-        <h2>No event found</h2>
+        <Card>
+          <h2>No event found</h2>
+        </Card>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="center">
+        <h2>Loading...</h2>
       </div>
     );
   }
