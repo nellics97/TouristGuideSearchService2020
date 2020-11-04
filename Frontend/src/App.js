@@ -10,6 +10,8 @@ import Users from "./user/pages/Users";
 import NewEvent from "./events/pages/NewEvent";
 import Events from "./events/pages/Events";
 import UpdateEvent from "./events/pages/UpdateEvent";
+import Profile from "./user/pages/Profile";
+import Chat from "./chat/Chat";
 import Auth from "./user/pages/Auth";
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
 import { AuthContext } from "./shared/context/auth-context";
@@ -33,6 +35,9 @@ function App() {
         <Route path="/" exact>
           <Events />
         </Route>
+        <Route path="/:userId/profile" exact>
+          <Profile />
+        </Route>
         <Route path="/users" exact>
           <Users />
         </Route>
@@ -47,6 +52,9 @@ function App() {
         </Route>
         <Route path="/events/:eventId">
           <UpdateEvent />
+        </Route>
+        <Route path="/chat/:eventId">
+          <Chat />
         </Route>
         <Redirect to="/" />
       </Switch>
