@@ -1,16 +1,17 @@
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap");
 
 * {
   box-sizing: border-box;
 }
 
 html {
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
 }
 
 body {
   margin: 0;
-  background: #4d4d4d;
+  background: #fba6ff;
+  background: linear-gradient(90deg, #fdccff 0%, #e6a6ff 100%);
 }
 
 .slide-in-left-enter {
