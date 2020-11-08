@@ -249,7 +249,7 @@ const deleteEvent = async (req, res, next) => {
     event = await Event.findById(eventId).populate("creator");
   } catch (err) {
     const error = new HttpError(
-      "Something went wrong, could not delete event.",
+      "Something went wrong, could not delete event. >:(",
       500
     );
     return next(error);
@@ -269,7 +269,7 @@ const deleteEvent = async (req, res, next) => {
     await sess.commitTransaction();
   } catch (err) {
     const error = new HttpError(
-      "Something went wrong, could not delete event.",
+      "Something went wrong, could not delete event. :(",
       500
     );
     return next(error);

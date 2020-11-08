@@ -24,6 +24,12 @@ const Events = () => {
     fetchEvents();
   }, [sendRequest]);
 
+  const eventDeleteHandler = (deletedEventId) => {
+    setLoadedEvents((prevEvents) =>
+      prevEvents.filter((event) => event.id !== deletedEventId)
+    );
+  };
+
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />
@@ -32,7 +38,9 @@ const Events = () => {
           <LoadingSpinner />
         </div>
       )}
-      {!isLoading && loadedEvents && <EventList items={loadedEvents} />}
+      {!isLoading && loadedEvents && (
+        <EventList items={loadedEvents} onDeleteEvent={eventDeleteHandler} />
+      )}
     </React.Fragment>
   );
 };

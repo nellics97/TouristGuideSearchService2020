@@ -10,6 +10,7 @@ import Users from "./user/pages/Users";
 import NewEvent from "./events/pages/NewEvent";
 import Events from "./events/pages/Events";
 import UpdateEvent from "./events/pages/UpdateEvent";
+import EventProfile from "./events/pages/EventProfile";
 import Profile from "./user/pages/Profile";
 import Chat from "./chat/Chat";
 import Auth from "./user/pages/Auth";
@@ -51,7 +52,7 @@ function App() {
           <NewEvent />
         </Route>
         <Route path="/events/:eventId">
-          <UpdateEvent />
+          <EventProfile />
         </Route>
         <Route path="/chat/:eventId">
           <Chat />

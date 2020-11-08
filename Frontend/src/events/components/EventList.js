@@ -10,7 +10,6 @@ const EventList = (props) => {
       <div className="event_list center">
         <Card>
           <h2>No events found</h2>
-          <button>Share Event</button>
         </Card>
       </div>
     );
@@ -27,6 +26,7 @@ const EventList = (props) => {
           description={event.description}
           attendees={event.attendees}
           creator={event.creator}
+          onDelete={props.onDeleteEvent}
         />
       ))}
     </ul>
