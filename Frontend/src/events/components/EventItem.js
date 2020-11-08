@@ -54,7 +54,7 @@ const EventItem = (props) => {
             <h3>{props.creator}</h3>
           </div>
           <div className="event-item__actions">
-            {auth.isLoggedIn && <Button to={`/chat/$props.id`}>Apply</Button>}
+            {auth.isLoggedIn && <Button to={`/chat/${props.id}`}>Apply</Button>}
             {auth.isLoggedIn && (
               <Button to={`/events/${props.id}`}>Edit</Button>
             )}

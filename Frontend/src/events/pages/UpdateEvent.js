@@ -1,38 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
 import Card from "../../shared/components/UIElements/Card";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import {
   VALIDATOR_REQUIRE,
   VALIDATOR_MINLENGTH,
 } from "../../shared/util/validators";
 import { useForm } from "../../shared/hooks/form-hook";
+import { useHttpClient } from "../../shared/hooks/http-hook";
 import "./EventForm.css";
 
-const DUMMY_EVENTS = [
-  {
-    id: "e1",
-    title: "bulika",
-    place: "bucinál",
-    description: "házavató",
-    attendees: "4",
-    creator: "u1",
-  },
-  {
-    id: "e2",
-    title: "kocsmázás",
-    place: "paranoir",
-    description: "halloween",
-    attendees: "7",
-    creator: "u1",
-  },
-];
-
 const UpdateEvent = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const [loadedEvent, setLoadedEvent] = useState();
+
   const eventId = useParams().eventId;
+  const history = useHistory();
+  console.log(eventId);
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -56,41 +44,67 @@ const UpdateEvent = () => {
     false
   );
 
-  const identifiedEvent = DUMMY_EVENTS.find((e) => e.id === eventId);
-
   useEffect(() => {
-    if (identifiedEvent) {
-      setFormData(
-        {
-          title: {
-            value: identifiedEvent.title,
-            isValid: true,
+    const fetchEvent = async () => {
+      try {
+        const responseData = await sendRequest(
+          `http://localhost:5000/api/events/${eventId}`
+        );
+        setLoadedEvent(responseData.event);
+        setFormData(
+          {
+            title: {
+              value: responseData.event.title,
+              isValid: true,
+            },
+            place: {
+              value: responseData.event.place,
+              isValid: true,
+            },
+            description: {
+              value: responseData.event.description,
+              isValid: true,
+            },
+            attendees: {
+              value: responseData.event.attendees,
+              isValid: true,
+            },
           },
-          place: {
-            value: identifiedEvent.place,
-            isValid: true,
-          },
-          description: {
-            value: identifiedEvent.description,
-            isValid: true,
-          },
-          attendees: {
-            value: identifiedEvent.attendees,
-            isValid: true,
-          },
-        },
-        true
-      );
-    }
-    setIsLoading(false);
-  }, [setFormData, identifiedEvent]);
+          true
+        );
+      } catch (err) {}
+    };
+    fetchEvent();
+  }, [sendRequest, eventId, setFormData]);
 
-  const eventUpdateSubmitHandler = (event) => {
+  const eventUpdateSubmitHandler = async (event) => {
     event.preventDefault();
-    console.log(formState.inputs);
+    try {
+      await sendRequest(
+        `http://localhost:5000/api/events/${eventId}`,
+        "PATCH",
+        JSON.stringify({
+          title: formState.inputs.title.value,
+          place: formState.inputs.place.value,
+          description: formState.inputs.description.value,
+          attendees: formState.inputs.attendees.value,
+        }),
+        { "Content-Type": "application/json" }
+      );
+      console.log(sendRequest);
+      history.push("/"); //majd az event oldalara iranyitsd
+    } catch (err) {}
   };
 
-  if (!identifiedEvent) {
+  if (isLoading) {
+    return (
+      <div className="center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (!loadedEvent && !error) {
     return (
       <div className="center">
         <Card>
@@ -100,64 +114,61 @@ const UpdateEvent = () => {
     );
   }
 
-  if (isLoading) {
-    return (
-      <div className="center">
-        <h2>Loading...</h2>
-      </div>
-    );
-  }
-
   return (
-    <form className="event-form" onSubmit={eventUpdateSubmitHandler}>
-      <Input
-        id="title"
-        element="input"
-        type="text"
-        label="Title"
-        validators={[VALIDATOR_REQUIRE()]}
-        error="enter valid title"
-        onInput={inputHandler}
-        value={formState.inputs.title.value}
-        valid={formState.inputs.title.isValid}
-      />
-      <Input
-        id="place"
-        element="input"
-        type="text"
-        label="Place"
-        validators={[VALIDATOR_REQUIRE()]}
-        error="enter valid place"
-        onInput={inputHandler}
-        value={formState.inputs.place.value}
-        valid={formState.inputs.place.isValid}
-      />
-      <Input
-        id="description"
-        element="textarea"
-        type="text"
-        label="Description"
-        validators={[VALIDATOR_MINLENGTH(5)]}
-        error="enter valid description"
-        onInput={inputHandler}
-        value={formState.inputs.description.value}
-        valid={formState.inputs.description.isValid}
-      />
-      <Input
-        id="attendees"
-        element="input"
-        type="number"
-        label="Attendees"
-        validators={[VALIDATOR_REQUIRE()]}
-        error="enter valid number"
-        onInput={inputHandler}
-        value={formState.inputs.attendees.value}
-        valid={formState.inputs.attendees.isValid}
-      />
-      <Button type="submit" disabled={!formState.isValid}>
-        Update Event
-      </Button>
-    </form>
+    <React.Fragment>
+      <ErrorModal error={error} onClear={clearError} />
+      {!isLoading && loadedEvent && (
+        <form className="event-form" onSubmit={eventUpdateSubmitHandler}>
+          <Input
+            id="title"
+            element="input"
+            type="text"
+            label="Title"
+            validators={[VALIDATOR_REQUIRE()]}
+            error="enter valid title"
+            onInput={inputHandler}
+            value={loadedEvent.title}
+            valid={true}
+          />
+          <Input
+            id="place"
+            element="input"
+            type="text"
+            label="Place"
+            validators={[VALIDATOR_REQUIRE()]}
+            error="enter valid place"
+            onInput={inputHandler}
+            value={loadedEvent.place}
+            valid={true}
+          />
+          <Input
+            id="description"
+            element="textarea"
+            type="text"
+            label="Description"
+            validators={[VALIDATOR_MINLENGTH(5)]}
+            error="enter valid description"
+            onInput={inputHandler}
+            value={loadedEvent.description}
+            valid={true}
+          />
+          <Input
+            id="attendees"
+            element="input"
+            type="number"
+            label="Attendees"
+            validators={[VALIDATOR_REQUIRE()]}
+            error="enter valid number"
+            onInput={inputHandler}
+            value={loadedEvent.attendees}
+            valid={true}
+          />
+          <Button type="submit" disabled={!formState.isValid}>
+            Update Event
+          </Button>
+        </form>
+      )}
+    </React.Fragment>
   );
 };
 

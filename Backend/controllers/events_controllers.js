@@ -160,9 +160,9 @@ const updateEvent = async (req, res, next) => {
   event.attendees >= event.creator.length
     ? (event.attendees = attendees)
     : console.log("Too many users");
-  event.creator.indexOf(creator) === -1
-    ? event.creator.push(creator)
-    : console.log("User already attends");
+  //event.creator.indexOf(creator) === -1
+  //  ? event.creator.push(creator)
+  //  : console.log("User already attends");
 
   try {
     await event.save();
