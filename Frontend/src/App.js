@@ -39,11 +39,11 @@ function App() {
         <Route path="/" exact>
           <Events />
         </Route>
-        <Route path="/:userId/profile" exact>
-          <Profile />
-        </Route>
         <Route path="/users" exact>
           <Users />
+        </Route>
+        <Route path="/users/:userId/" exact>
+          <Profile />
         </Route>
         <Route path="/events" exact>
           <Events />

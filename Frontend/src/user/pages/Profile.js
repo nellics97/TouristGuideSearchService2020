@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useParams } from "react-router-dom";
 
 import Avatar from "../../shared/components/UIElements/Avatar";
 import Card from "../../shared/components/UIElements/Card";
@@ -9,9 +10,29 @@ import ReviewsList from "../components/ReviewsList";
 import "./Profile.css";
 import { VALIDATOR_MINLENGTH } from "../../shared/util/validators";
 import { useForm } from "../../shared/hooks/form-hook";
+import { AuthContext } from "../../shared/context/auth-context";
+import { useHttpClient } from "../../shared/hooks/http-hook";
 
 const Profile = (props) => {
   const [showModal, setShowModal] = useState(false);
+  const userId = useParams().userId;
+  console.log(userId);
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const auth = useContext(AuthContext);
+  const [loadedUser, setLoadedUser] = useState();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const responseData = await sendRequest(
+          `http://localhost:5000/api/users/${userId}`
+        );
+        setLoadedUser(responseData.user);
+        console.log(responseData);
+      } catch (err) {}
+    };
+    fetchUserData();
+  }, [sendRequest, userId]);
 
   const showModalHandler = () => {
     setShowModal(true);
@@ -47,9 +68,12 @@ const Profile = (props) => {
       <br></br>
       <div>
         <Card>
-          <h3>
-            itt van a user bemutatkozása. biztos érdekes dolgokat ír magáról
-          </h3>
+          {!isLoading && loadedUser && (
+            <React.Fragment>
+              <h2>{loadedUser.name}</h2>
+              <h3>{loadedUser.email}</h3>
+            </React.Fragment>
+          )}
         </Card>
       </div>
       <div>

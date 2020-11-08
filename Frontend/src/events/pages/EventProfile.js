@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import Card from "../../shared/components/UIElements/Card";
 import Button from "../../shared/components/FormElements/Button";
 import Modal from "../../shared/components/UIElements/Modal";
@@ -16,6 +16,7 @@ const EventProfile = (props) => {
   const auth = useContext(AuthContext);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [loadedEvent, setLoadedEvent] = useState();
+  const history = useHistory();
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -41,10 +42,11 @@ const EventProfile = (props) => {
     setShowConfirmModal(false);
     try {
       await sendRequest(
-        `http://localhost:5000/api/events/${props.id}`,
+        `http://localhost:5000/api/events/${eventId}`,
         "DELETE"
       );
-      props.onDelete(props.id);
+      props.onDelete(eventId);
+      history.push("/events");
     } catch (err) {}
   };
 

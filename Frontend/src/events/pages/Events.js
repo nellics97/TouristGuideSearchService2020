@@ -10,7 +10,7 @@ const Events = () => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedEvents, setLoadedEvents] = useState();
 
-  const userId = useParams().userId; //mi a faszert undefined??
+  const userId = useParams().userId; //mi a faszert undefined?? ja mar tudom :D
 
   useEffect(() => {
     const fetchEvents = async () => {

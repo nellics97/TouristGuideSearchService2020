@@ -30,7 +30,7 @@ router.patch(
   eventsControllers.updateEvent
 );
 
-router.patch("/:eid/addattendee", eventsControllers.addNewAttendee);
+router.patch("/:eid/addattendee", eventsControllers.addNewAttendee); //na ez nem igy lesz am :D
 
 router.delete("/:eid", eventsControllers.deleteEvent);
 
