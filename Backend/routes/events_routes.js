@@ -5,9 +5,11 @@ const eventsControllers = require("../controllers/events_controllers");
 
 const router = express.Router();
 
+router.get("/", eventsControllers.getEvents);
+
 router.get("/:eid", eventsControllers.getEventById);
 
-router.get("/user/:uid", eventsControllers.getEventsByUserId);
+router.get("/:uid", eventsControllers.getEventsByUserId);
 
 router.get("/:eid/users", eventsControllers.getAttendeesById);
 

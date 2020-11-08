@@ -8,6 +8,22 @@ const User = require("../models/user");
 const { create } = require("../models/user");
 const user = require("../models/user");
 
+const getEvents = async (req, res, next) => {
+  let events;
+  try {
+    events = await Event.find();
+  } catch (err) {
+    const error = new HttpError(
+      "Fetching events failed, please try again later. itt romlott el",
+      500
+    );
+    return next(error);
+  }
+  res.json({
+    events: events.map((event) => event.toObject({ getters: true })),
+  });
+};
+
 const getEventById = async (req, res, next) => {
   const eventId = req.params.eid; // { eid: 'e1' }
 
@@ -262,6 +278,7 @@ const deleteEvent = async (req, res, next) => {
   res.status(200).json({ message: "Deleted event." });
 };
 
+exports.getEvents = getEvents;
 exports.getEventById = getEventById;
 exports.getEventsByUserId = getEventsByUserId;
 exports.createEvent = createEvent;
