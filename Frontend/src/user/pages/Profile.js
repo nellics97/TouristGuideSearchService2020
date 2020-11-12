@@ -59,11 +59,13 @@ const Profile = (props) => {
 
   return (
     <React.Fragment>
-      <div className="username">
-        <h1>nelli</h1>
-      </div>
+      {!isLoading && loadedUser && auth.userId === loadedUser.id && (
+        <Button to={`/users/${loadedUser.id}/update`}> Edit Profile</Button>
+      )}
       <div className="profile_picture">
-        <Avatar image="https://i.imgur.com/187Y4u3.png" />
+        {!isLoading && loadedUser && (
+          <Avatar image={`http://localhost:5000/${loadedUser.image}`} />
+        )}
       </div>
       <br></br>
       <div>

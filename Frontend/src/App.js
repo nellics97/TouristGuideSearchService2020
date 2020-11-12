@@ -12,6 +12,7 @@ import Events from "./events/pages/Events";
 import UpdateEvent from "./events/pages/UpdateEvent";
 import EventProfile from "./events/pages/EventProfile";
 import Profile from "./user/pages/Profile";
+import UpdateProfile from "./user/pages/UpdateProfile";
 import Chat from "./chat/Chat";
 import Auth from "./user/pages/Auth";
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
@@ -44,6 +45,9 @@ function App() {
         </Route>
         <Route path="/users/:userId/" exact>
           <Profile />
+        </Route>
+        <Route path="/users/:userId/update" exact>
+          <UpdateProfile />
         </Route>
         <Route path="/events" exact>
           <Events />
