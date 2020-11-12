@@ -94,7 +94,7 @@ const EventProfile = (props) => {
             {!isLoading &&
               loadedEvent &&
               auth.userId === loadedEvent.creator && (
-                <Button to={`/events/${eventId}`}>Edit</Button>
+                <Button to={`/events/${eventId}/update`}>Edit</Button>
               )}
             {!isLoading && loadedEvent && auth.userId === loadedEvent.creator && (
               <Button danger onClick={showDeleteWarningHandler}>

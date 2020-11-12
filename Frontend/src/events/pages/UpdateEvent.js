@@ -81,7 +81,7 @@ const UpdateEvent = () => {
     event.preventDefault();
     try {
       await sendRequest(
-        `http://localhost:5000/api/events/${eventId}`,
+        `http://localhost:5000/api/events/${eventId}/update`,
         "PATCH",
         JSON.stringify({
           title: formState.inputs.title.value,

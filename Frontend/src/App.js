@@ -51,6 +51,9 @@ function App() {
         <Route path="/events/new" exact>
           <NewEvent />
         </Route>
+        <Route path="/events/:eventId/update" exact>
+          <UpdateEvent />
+        </Route>
         <Route path="/events/:eventId">
           <EventProfile />
         </Route>
