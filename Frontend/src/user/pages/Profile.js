@@ -17,7 +17,7 @@ const Profile = (props) => {
   const [showModal, setShowModal] = useState(false);
   const userId = useParams().userId;
   console.log(userId);
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const { isLoading, sendRequest } = useHttpClient();
   const auth = useContext(AuthContext);
   const [loadedUser, setLoadedUser] = useState();
 
