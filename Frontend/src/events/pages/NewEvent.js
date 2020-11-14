@@ -42,8 +42,7 @@ const NewEvent = () => {
 
   const eventCreatorHandler = async (event) => {
     event.preventDefault();
-    console.log(auth.userId);
-    console.log(auth.token);
+
     try {
       //const formData = new FormData();
       //formData.append("title", formState.inputs.title.value);
@@ -67,7 +66,7 @@ const NewEvent = () => {
           "Content-Type": "application/json",
         }
       );
-      console.log("fasz");
+
       history.push("/");
     } catch (err) {}
   };

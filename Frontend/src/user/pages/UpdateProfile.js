@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams, useHistory } from "react-router-dom";
 
 import Input from "../../shared/components/FormElements/Input";
@@ -12,15 +12,15 @@ import {
 } from "../../shared/util/validators";
 import { useForm } from "../../shared/hooks/form-hook";
 import { useHttpClient } from "../../shared/hooks/http-hook";
+import { AuthContext } from "../../shared/context/auth-context";
 import "./UpdateProfile.css";
 
 const UpdateProfile = () => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedUser, setLoadedUser] = useState();
-
+  const auth = useContext(AuthContext);
   const userId = useParams().userId;
   const history = useHistory();
-  console.log(userId);
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -80,7 +80,10 @@ const UpdateProfile = () => {
           email: formState.inputs.email.value,
           description: formState.inputs.description.value,
         }),
-        { "Content-Type": "application/json" }
+        {
+          Authorization: "Bearer " + auth.token,
+          "Content-Type": "application/json",
+        }
       );
       console.log(sendRequest);
       history.push("/");

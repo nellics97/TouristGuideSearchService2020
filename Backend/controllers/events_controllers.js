@@ -91,7 +91,7 @@ const createEvent = async (req, res, next) => {
     place,
     description,
     attendees,
-    creator,
+    creator: req.userData.userId,
   });
 
   let user;
