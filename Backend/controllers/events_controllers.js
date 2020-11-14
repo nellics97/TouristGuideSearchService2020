@@ -200,13 +200,24 @@ const addNewAttendee = async (req, res, next) => {
     return next(error);
   }
 
-  event.attendees >= event.participant.length - 1 &&
-  event.participant.indexOf(participant.toString()) === -1
-    ? event.participant.push(participant)
-    : console.log("Cannot apply");
-  console.log(event.attendees);
-  console.log(event.participant);
-  console.log(participant);
+  if (
+    event.attendees > event.participant.length + 1 &&
+    event.participant.indexOf(participant.toString()) === -1
+  ) {
+    event.participant.push(participant);
+  } else {
+    const error = new HttpError("You cant apply!", 403);
+    return next(error);
+  }
+
+  //event.attendees > event.participant.length + 1 &&
+  //event.participant.indexOf(participant.toString()) === -1
+  //  ? event.participant.push(participant)
+  //  : console.log("Cannot apply");
+  //console.log(event.attendees);
+  //console.log(event.participant);
+  //console.log(participant);
+  //console.log(event.participant.length);
 
   try {
     await event.save();

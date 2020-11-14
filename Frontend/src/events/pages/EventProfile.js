@@ -7,6 +7,7 @@ import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { AuthContext } from "../../shared/context/auth-context";
 import { useHttpClient } from "../../shared/hooks/http-hook";
+import { useForm } from "../../shared/hooks/form-hook";
 
 import "./EventProfile.css";
 
@@ -52,6 +53,25 @@ const EventProfile = (props) => {
     history.push("/");
   };
 
+  const ManageAttendeesHandler = async (event) => {
+    event.preventDefault();
+    try {
+      await sendRequest(
+        `http://localhost:5000/api/events/${eventId}/addattendee`,
+        "PATCH",
+        JSON.stringify({
+          participant: auth.userId,
+        }),
+        {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + auth.token,
+        }
+      );
+      console.log(sendRequest);
+      history.push("/"); //majd az event oldalara iranyitsd
+    } catch (err) {}
+  };
+
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />
@@ -91,7 +111,7 @@ const EventProfile = (props) => {
             {!isLoading &&
               loadedEvent &&
               auth.userId !== loadedEvent.creator && (
-                <Button to={`/events/${eventId}`}>Apply</Button>
+                <Button onClick={ManageAttendeesHandler}>Apply</Button>
               )}
             {!isLoading &&
               loadedEvent &&
