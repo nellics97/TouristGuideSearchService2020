@@ -14,6 +14,8 @@ router.get("/:uid", eventsControllers.getEventsByUserId);
 
 router.get("/:eid/users", eventsControllers.getAttendeesById);
 
+router.patch("/:eid/addattendee", eventsControllers.addNewAttendee); //na ez nem igy lesz am :D
+
 router.use(checkAuth);
 
 router.post(
@@ -32,8 +34,6 @@ router.patch(
   [check("title").not().isEmpty(), check("description").isLength({ min: 5 })],
   eventsControllers.updateEvent
 );
-
-router.patch("/:eid/addattendee", eventsControllers.addNewAttendee); //na ez nem igy lesz am :D
 
 router.delete("/:eid", eventsControllers.deleteEvent);
 

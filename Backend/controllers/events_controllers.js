@@ -164,12 +164,7 @@ const updateEvent = async (req, res, next) => {
   event.title = title;
   event.description = description;
   event.place = place;
-  event.attendees >= event.creator.length
-    ? (event.attendees = attendees)
-    : console.log("Too many users");
-  //event.creator.indexOf(creator) === -1
-  //  ? event.creator.push(creator)
-  //  : console.log("User already attends");
+  event.attendees = attendees;
 
   try {
     await event.save();
@@ -192,9 +187,8 @@ const addNewAttendee = async (req, res, next) => {
     );
   }
 
-  const { creator } = req.body;
+  const { attendees, creator, participant } = req.body;
   const eventId = req.params.eid;
-
   let event;
   try {
     event = await Event.findById(eventId);
@@ -206,9 +200,13 @@ const addNewAttendee = async (req, res, next) => {
     return next(error);
   }
 
-  event.creator.indexOf(creator) === -1
-    ? event.creator.push(creator)
-    : console.log("User already attends");
+  event.attendees >= event.participant.length - 1 &&
+  event.participant.indexOf(participant.toString()) === -1
+    ? event.participant.push(participant)
+    : console.log("Cannot apply");
+  console.log(event.attendees);
+  console.log(event.participant);
+  console.log(participant);
 
   try {
     await event.save();

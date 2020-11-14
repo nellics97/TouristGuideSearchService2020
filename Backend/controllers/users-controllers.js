@@ -205,6 +205,17 @@ const updateUser = async (req, res, next) => {
     return next(error);
   }
 
+  //console.log("ttest");
+  //console.log(user.userId);
+  //console.log(req.userData.userId);
+  //if (user.userId !== req.userData.userId) {
+  //  const error = new HttpError(
+  //    "You really shouldn't edit other users' profile!",
+  //    403
+  //  );
+  //  return next(error);
+  //}
+
   user.name = name;
   user.email = email;
   user.description = description;
