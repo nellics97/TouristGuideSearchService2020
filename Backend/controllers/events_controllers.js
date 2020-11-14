@@ -153,6 +153,14 @@ const updateEvent = async (req, res, next) => {
     return next(error);
   }
 
+  if (event.creator.toString() !== req.userData.userId) {
+    const error = new HttpError(
+      "You really shouldn't edit other users' events!",
+      403
+    );
+    return next(error);
+  }
+
   event.title = title;
   event.description = description;
   event.place = place;
@@ -256,6 +264,14 @@ const deleteEvent = async (req, res, next) => {
 
   if (!event) {
     const error = new HttpError("Couldn't find event for this id", 404);
+    return next(error);
+  }
+
+  if (event.creator.id !== req.userData.userId) {
+    const error = new HttpError(
+      "You really shouldn't delete other users' events",
+      403
+    );
     return next(error);
   }
 

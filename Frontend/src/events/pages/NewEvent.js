@@ -52,7 +52,7 @@ const NewEvent = () => {
       //formData.append("attendees", formState.inputs.attendees.value);
       //formData.append("creator", auth.userId);
       console.log(formState.inputs.title.value);
-      const responseData = await sendRequest(
+      await sendRequest(
         "http://localhost:5000/api/events",
         "POST",
         JSON.stringify({

@@ -43,11 +43,13 @@ const EventProfile = (props) => {
     try {
       await sendRequest(
         `http://localhost:5000/api/events/${eventId}`,
-        "DELETE"
+        "DELETE",
+        null,
+        { Authorization: "Bearer " + auth.token }
       );
       props.onDelete(eventId);
-      history.push("/events");
     } catch (err) {}
+    history.push("/");
   };
 
   return (

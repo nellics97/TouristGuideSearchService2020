@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams, useHistory } from "react-router-dom";
 
 import Input from "../../shared/components/FormElements/Input";
@@ -12,12 +12,13 @@ import {
 } from "../../shared/util/validators";
 import { useForm } from "../../shared/hooks/form-hook";
 import { useHttpClient } from "../../shared/hooks/http-hook";
+import { AuthContext } from "../../shared/context/auth-context";
 import "./EventForm.css";
 
 const UpdateEvent = () => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedEvent, setLoadedEvent] = useState();
-
+  const auth = useContext(AuthContext);
   const eventId = useParams().eventId;
   const history = useHistory();
   console.log(eventId);
@@ -89,7 +90,10 @@ const UpdateEvent = () => {
           description: formState.inputs.description.value,
           attendees: formState.inputs.attendees.value,
         }),
-        { "Content-Type": "application/json" }
+        {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + auth.token,
+        }
       );
       console.log(sendRequest);
       history.push("/"); //majd az event oldalara iranyitsd
