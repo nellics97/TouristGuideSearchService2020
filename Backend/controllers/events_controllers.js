@@ -78,15 +78,14 @@ const getEventsByUserId = async (req, res, next) => {
 
 const createEvent = async (req, res, next) => {
   const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return next(
-      new HttpError("Invalid inputs passed, please check your data.", 422)
-    );
-  }
+  //if (!errors.isEmpty()) {
+  //  return next(
+  //    new HttpError("Invalid inputs passed, please check your data.1", 422)
+  //  );
+  //}
 
   const { title, place, description, attendees, creator } = req.body;
-
-  // const title = req.body.title;
+  console.log(req.title);
   const createdEvent = new Event({
     title,
     place,
@@ -108,7 +107,7 @@ const createEvent = async (req, res, next) => {
   }
 
   if (!user) {
-    const error = new HttpError("Couldn't find user for provided id", 404);
+    const error = new HttpError("Couldn't find user for provided id1", 404);
     return next(error);
   }
 
@@ -136,7 +135,7 @@ const updateEvent = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(
-      new HttpError("Invalid inputs passed, please check your data.", 422)
+      new HttpError("Invalid inputs passed, please check your data.2", 422)
     );
   }
 

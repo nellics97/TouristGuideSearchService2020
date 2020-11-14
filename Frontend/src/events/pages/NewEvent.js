@@ -42,8 +42,17 @@ const NewEvent = () => {
 
   const eventCreatorHandler = async (event) => {
     event.preventDefault();
+    console.log(auth.userId);
+    console.log(auth.token);
     try {
-      await sendRequest(
+      //const formData = new FormData();
+      //formData.append("title", formState.inputs.title.value);
+      //formData.append("place", formState.inputs.place.value);
+      //formData.append("description", formState.inputs.description.value);
+      //formData.append("attendees", formState.inputs.attendees.value);
+      //formData.append("creator", auth.userId);
+      console.log(formState.inputs.title.value);
+      const responseData = await sendRequest(
         "http://localhost:5000/api/events",
         "POST",
         JSON.stringify({
@@ -53,8 +62,12 @@ const NewEvent = () => {
           attendees: formState.inputs.attendees.value,
           creator: auth.userId,
         }),
-        { "Content-Type": "application/json" }
+        {
+          Authorization: "Bearer " + auth.token,
+          "Content-Type": "application/json",
+        }
       );
+      console.log("fasz");
       history.push("/");
     } catch (err) {}
   };

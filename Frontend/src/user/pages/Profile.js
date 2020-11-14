@@ -72,8 +72,8 @@ const Profile = (props) => {
         <Card>
           {!isLoading && loadedUser && (
             <React.Fragment>
-              <h2>{loadedUser.name}</h2>
-              <h3>{loadedUser.email}</h3>
+              <h1>{loadedUser.name}</h1>
+              <p>{loadedUser.description}</p>
             </React.Fragment>
           )}
         </Card>

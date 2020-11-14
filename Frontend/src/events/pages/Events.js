@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 
 import EventList from "../components/EventList";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
@@ -9,8 +8,6 @@ import { useHttpClient } from "../../shared/hooks/http-hook";
 const Events = () => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedEvents, setLoadedEvents] = useState();
-
-  //const userId = useParams().userId;
 
   useEffect(() => {
     const fetchEvents = async () => {
