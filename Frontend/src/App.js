@@ -18,6 +18,7 @@ import Auth from "./user/pages/Auth";
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
 import { AuthContext } from "./shared/context/auth-context";
 import { useAuth } from "./shared/hooks/auth-hook";
+import UserEvents from "./events/pages/UserEvents";
 
 function App() {
   const { token, login, logout, userId } = useAuth();
@@ -44,6 +45,9 @@ function App() {
         </Route>
         <Route path="/events/new" exact>
           <NewEvent />
+        </Route>
+        <Route path="/events/:userId">
+          <UserEvents />
         </Route>
         <Route path="/events/:eventId/update" exact>
           <UpdateEvent />

@@ -4,7 +4,6 @@ const HttpError = require("../models/http-error");
 
 const getReviewsByUser = async (req, res, next) => {
   const userId = req.params.uid;
-  console.log("+FASZ");
   console.log(userId);
   let review;
   try {

@@ -50,22 +50,24 @@ const getEventById = async (req, res, next) => {
 };
 
 const getEventsByUserId = async (req, res, next) => {
+  console.log("fasz");
   const userId = req.params.uid;
-
   let userWithEvents;
+
   try {
     userWithEvents = await User.findById(userId).populate("events");
   } catch (err) {
     const error = new HttpError(
-      "Fetching events failed, please try again later",
+      "Fetching events failed, please try again later.",
       500
     );
     return next(error);
   }
 
+  console.log(userWithEvents);
   if (!userWithEvents || userWithEvents.events.length === 0) {
     return next(
-      new HttpError("Could not find events for the provided user id.", 404)
+      new HttpError("Could not find eventss for the provided user id.", 404)
     );
   }
 

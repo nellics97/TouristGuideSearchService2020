@@ -7,6 +7,7 @@ import Button from "../../shared/components/FormElements/Button";
 import Modal from "../../shared/components/UIElements/Modal";
 import Input from "../../shared/components/FormElements/Input";
 import ReviewsList from "../components/ReviewsList";
+import SingleReview from "../components/SingleReview";
 import "./Profile.css";
 import { VALIDATOR_MINLENGTH } from "../../shared/util/validators";
 import { useForm } from "../../shared/hooks/form-hook";
@@ -16,7 +17,6 @@ import { useHttpClient } from "../../shared/hooks/http-hook";
 const Profile = (props) => {
   const [showModal, setShowModal] = useState(false);
   const userId = useParams().userId;
-  console.log(userId);
   const { isLoading, sendRequest } = useHttpClient();
   const auth = useContext(AuthContext);
   const [loadedUser, setLoadedUser] = useState();
@@ -30,7 +30,6 @@ const Profile = (props) => {
           `http://localhost:5000/api/users/${userId}`
         );
         setLoadedUser(responseData.user);
-        console.log(responseData);
       } catch (err) {}
     };
     fetchUserData();
@@ -44,10 +43,10 @@ const Profile = (props) => {
     setShowModal(false);
   };
 
-  const confirmReviewHandler = () => {
-    setShowModal(false);
-    console.log("Review ok");
-  };
+  //const confirmReviewHandler = () => {
+  //  setShowModal(false);
+  //  console.log("Review ok");
+  //};
 
   const [formState, inputHandler] = useForm(
     {
@@ -107,7 +106,7 @@ const Profile = (props) => {
       </div>
       <div>
         <Card>
-          <ReviewsList />
+          <SingleReview />
         </Card>
         {!isLoading && loadedUser && loadedUser.id !== auth.userId && (
           <Button onClick={showModalHandler}>Write Review</Button>

@@ -10,11 +10,11 @@ router.get("/", eventsControllers.getEvents);
 
 router.get("/:eid", eventsControllers.getEventById);
 
-router.get("/:uid", eventsControllers.getEventsByUserId);
+router.get("/user/:uid", eventsControllers.getEventsByUserId);
 
 router.get("/:eid/users", eventsControllers.getAttendeesById);
 
-router.patch("/:eid/addattendee", eventsControllers.addNewAttendee); //na ez nem igy lesz am :D
+router.patch("/:eid/addattendee", eventsControllers.addNewAttendee);
 
 router.use(checkAuth);
 
