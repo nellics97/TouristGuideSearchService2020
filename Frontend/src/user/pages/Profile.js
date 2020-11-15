@@ -6,8 +6,7 @@ import Card from "../../shared/components/UIElements/Card";
 import Button from "../../shared/components/FormElements/Button";
 import Modal from "../../shared/components/UIElements/Modal";
 import Input from "../../shared/components/FormElements/Input";
-import ReviewsList from "../components/ReviewsList";
-import SingleReview from "../components/SingleReview";
+import Reviews from "../components/Reviews";
 import "./Profile.css";
 import { VALIDATOR_MINLENGTH } from "../../shared/util/validators";
 import { useForm } from "../../shared/hooks/form-hook";
@@ -106,7 +105,7 @@ const Profile = (props) => {
       </div>
       <div>
         <Card>
-          <SingleReview />
+          <Reviews />
         </Card>
         {!isLoading && loadedUser && loadedUser.id !== auth.userId && (
           <Button onClick={showModalHandler}>Write Review</Button>

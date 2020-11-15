@@ -1,40 +1,75 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
+
+import Card from "../../shared/components/UIElements/Card";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import Button from "../../shared/components/FormElements/Button";
+import Modal from "../../shared/components/UIElements/Modal";
 import { useHttpClient } from "../../shared/hooks/http-hook";
-import { useParams } from "react-router-dom";
+import { AuthContext } from "../../shared/context/auth-context";
+import "../../events/components/EventItem.css";
 
-const SingleReview = () => {
-  const userId = useParams().userId;
-  const [loadedReviews, setLoadedReviews] = useState();
+const EventItem = (props) => {
+  const auth = useContext(AuthContext);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const { isLoading, sendRequest } = useHttpClient();
+  const showDeleteWarningHandler = () => {
+    setShowConfirmModal(true);
+  };
 
-  useEffect(() => {
-    const fetchReviews = async () => {
-      console.log(userId);
-      try {
-        const responseData = await sendRequest(
-          `http://localhost:5000/api/reviews/${userId}`
-        );
-        setLoadedReviews(responseData.review);
-        console.log("fasz");
-        console.log(loadedReviews.author);
-        console.log(loadedReviews.text);
-      } catch (err) {}
-    };
-    fetchReviews();
-  }, [sendRequest, userId]);
+  const cancelDeleteHandler = () => {
+    setShowConfirmModal(false);
+  };
+
+  const confirmDeleleteHandler = async () => {
+    setShowConfirmModal(false);
+    console.log(props.text);
+    try {
+      await sendRequest(
+        `http://localhost:5000/api/reviews/${props.id}`,
+        "DELETE",
+        null,
+        { Authorization: "Bearer " + auth.token }
+      );
+      props.onDelete(props.id);
+    } catch (err) {}
+  };
 
   return (
     <React.Fragment>
-      <h2>rewies</h2>
-      {!isLoading && loadedReviews && (
-        <React.Fragment>
-          <h2>rewiek</h2>
-          <h2>{loadedReviews.author}</h2>
-          <h3>{loadedReviews.text}</h3>
-        </React.Fragment>
-      )}
+      <Modal
+        show={showConfirmModal}
+        onCancel={cancelDeleteHandler}
+        header="Deletion warning"
+        footerClass="event-item__modal-actions"
+        footer={
+          <React.Fragment>
+            <Button inverse onClick={cancelDeleteHandler}>
+              Cancel
+            </Button>
+            <Button danger onClick={confirmDeleleteHandler}>
+              Delete
+            </Button>
+          </React.Fragment>
+        }
+      >
+        <p>Do you really want do delete this event?</p>
+      </Modal>
+      <li className="event-item">
+        <Card className="event-item__content">
+          {isLoading && <LoadingSpinner asOverLay />}
+          <div className="event-item__info">
+            <h3>{props.author}</h3>
+            <p>{props.text}</p>
+          </div>
+          {props.author === auth.userId && (
+            <Button danger onClick={showDeleteWarningHandler}>
+              Delete
+            </Button>
+          )}
+        </Card>
+      </li>
     </React.Fragment>
   );
 };
 
-export default SingleReview;
+export default EventItem;

@@ -8,7 +8,6 @@ const getReviewsByUser = async (req, res, next) => {
   let review;
   try {
     review = await Review.find({ receiver: userId });
-    console.log(review);
   } catch (err) {
     const error = new HttpError(
       "Fetching reviews failed, please try again later",
@@ -17,7 +16,9 @@ const getReviewsByUser = async (req, res, next) => {
     return next(error);
   }
 
-  res.status(201).json({ reviews: review });
+  res.json({
+    reviews: review.map((rew) => rew.toObject({ getters: true })),
+  });
 };
 
 const postReview = async (req, res, next) => {
