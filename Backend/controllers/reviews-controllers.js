@@ -31,7 +31,7 @@ const postReview = async (req, res, next) => {
     receiver,
   });
 
-  if (author.toString() === req.params.uid) {
+  if (author.toString() === req.userData.userId) {
     try {
       await createdReview.save();
     } catch (err) {

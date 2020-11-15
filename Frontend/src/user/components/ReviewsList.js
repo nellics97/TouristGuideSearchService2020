@@ -2,14 +2,24 @@ import React from "react";
 import SingleReview from "./SingleReview";
 
 const ReviewsList = (props) => {
-  const REVIEWS = ["nagyon jofej", "adom a srácot"];
   return (
-    <React.Fragment>
-      <h2>Reviews of user:</h2>
-      <div>
-        <SingleReview items={REVIEWS} />
-      </div>
-    </React.Fragment>
+    //<React.Fragment>
+    <h2>Reviews of user:</h2>
+    //</React.Fragment><div>
+    //  (
+    //  <ul className="event-list">
+    //    {props.items.map((review) => (
+    //      <SingleReview
+    //        key={review.id}
+    //        id={review.id}
+    //        author={review.author}
+    //        text={review.text}
+    //        onDelete={props.onDeleteEvent}
+    //      />
+    //    ))}
+    //  </ul>
+    //</div>
+    // </React.Fragment>
   );
 };
 

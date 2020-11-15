@@ -8,13 +8,13 @@ const router = express.Router();
 
 router.get("/:uid", reviewsController.getReviewsByUser);
 
+router.use(checkAuth);
+
 router.post(
   "/:uid",
   [check("text").isLength({ min: 10 })],
   reviewsController.postReview
 );
-
-router.use(checkAuth);
 
 router.delete("/:rid", reviewsController.deleteReview);
 

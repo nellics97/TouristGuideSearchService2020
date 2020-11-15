@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 
 import Avatar from "../../shared/components/UIElements/Avatar";
 import Card from "../../shared/components/UIElements/Card";
@@ -20,6 +20,8 @@ const Profile = (props) => {
   const { isLoading, sendRequest } = useHttpClient();
   const auth = useContext(AuthContext);
   const [loadedUser, setLoadedUser] = useState();
+
+  const history = useHistory();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -49,13 +51,38 @@ const Profile = (props) => {
 
   const [formState, inputHandler] = useForm(
     {
-      review: {
+      text: {
         value: "",
         isValid: false,
       },
     },
-    false
+    true
   );
+
+  const reviewCreatorHandler = async (event) => {
+    event.preventDefault();
+    setShowModal(false);
+    if (!isLoading && loadedUser) {
+      try {
+        console.log(formState.inputs.text.value);
+        await sendRequest(
+          `http://localhost:5000/api/reviews/${userId}`,
+          "POST",
+          JSON.stringify({
+            author: auth.userId,
+            text: formState.inputs.text.value,
+            receiver: userId,
+          }),
+          {
+            Authorization: "Bearer " + auth.token,
+            "Content-Type": "application/json",
+          }
+        );
+
+        history.push("/");
+      } catch (err) {}
+    }
+  };
 
   return (
     <React.Fragment>
@@ -82,9 +109,10 @@ const Profile = (props) => {
         <Card>
           <ReviewsList />
         </Card>
-        <Button onClick={showModalHandler}>Write Review</Button>
+        {!isLoading && loadedUser && loadedUser.id !== auth.userId && (
+          <Button onClick={showModalHandler}>Write Review</Button>
+        )}
       </div>
-
       <Modal
         show={showModal}
         onCancel={cancelReviewHandler}
@@ -93,22 +121,21 @@ const Profile = (props) => {
         footer={
           <React.Fragment>
             <Input
-              id="review"
+              id="text"
               element="textarea"
               type="text"
               validators={[VALIDATOR_MINLENGTH(10)]}
               error="enter valid review"
               onInput={inputHandler}
-              value={formState.inputs.review.value}
-              valid={formState.inputs.review.isValid}
             />
             <Button inverse onClick={cancelReviewHandler}>
               Cancel
             </Button>
             <Button
-              onClick={confirmReviewHandler}
+              onClick={reviewCreatorHandler}
               type="submit"
               disabled={!formState.isValid}
+              onSubmit={reviewCreatorHandler}
             >
               Ok
             </Button>
