@@ -1,5 +1,8 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
+import "@pathofdev/react-tag-input/build/index.css";
+import TagPicker from "../../shared/components/FormElements/TagPicker";
+import "react-day-picker/lib/style.css";
 
 import {
   VALIDATOR_MINLENGTH,
@@ -7,12 +10,15 @@ import {
 } from "../../shared/util/validators";
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
+import "../../shared/components/FormElements/Button.css";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { useForm } from "../../shared/hooks/form-hook";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
 import "./EventForm.css";
+import RadioButton from "../../shared/components/FormElements/RadioButton";
+import DatePicker from "../../shared/components/FormElements/DatePicker";
 
 const NewEvent = () => {
   const auth = useContext(AuthContext);
@@ -76,6 +82,7 @@ const NewEvent = () => {
       <ErrorModal error={error} onClear={clearError} />
       <form className="event-form" onSubmit={eventCreatorHandler}>
         {isLoading && <LoadingSpinner asOverlay />}
+        <RadioButton />
         <Input
           id="title"
           element="input"
@@ -94,6 +101,9 @@ const NewEvent = () => {
           errorText="Please enter valid place"
           onInput={inputHandler}
         />
+        <h4>Date</h4>
+        <DatePicker />
+
         <Input
           id="description"
           element="textarea"
@@ -111,6 +121,9 @@ const NewEvent = () => {
           errorText="Please enter valid number"
           onInput={inputHandler}
         />
+        <h4>You can add tags</h4>
+        <TagPicker />
+        <br></br>
         <Button type="submit" disabled={!formState.isValid}>
           Create event
         </Button>

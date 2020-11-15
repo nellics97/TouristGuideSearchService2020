@@ -25,7 +25,7 @@ const getEvents = async (req, res, next) => {
 };
 
 const getEventById = async (req, res, next) => {
-  const eventId = req.params.eid; // { eid: 'e1' }
+  const eventId = req.params.eid;
 
   let event;
   try {
@@ -50,7 +50,6 @@ const getEventById = async (req, res, next) => {
 };
 
 const getEventsByUserId = async (req, res, next) => {
-  console.log("fasz");
   const userId = req.params.uid;
   let userWithEvents;
 

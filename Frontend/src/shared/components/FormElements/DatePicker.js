@@ -3,7 +3,7 @@ import DayPicker from "react-day-picker";
 
 import "react-day-picker/lib/style.css";
 
-export default class Chat extends React.Component {
+export default class DatePicker extends React.Component {
   constructor(props) {
     super(props);
     this.handleDayClick = this.handleDayClick.bind(this);
@@ -15,6 +15,7 @@ export default class Chat extends React.Component {
   handleDayClick(day) {
     this.setState({ selectedDay: day });
     console.log(day.toLocaleDateString());
+    //this.props.parentCallback(day.toLocaleDateString());
   }
 
   render() {

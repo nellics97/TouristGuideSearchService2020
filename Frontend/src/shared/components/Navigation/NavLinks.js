@@ -26,7 +26,7 @@ const NavLinks = (props) => {
       </li>
       {auth.isLoggedIn && (
         <li>
-          <NavLink to={`/events/${auth.userId}`}>My events</NavLink>
+          <NavLink to={`/events/user/${auth.userId}`}>My events</NavLink>
         </li>
       )}
       {auth.isLoggedIn && (
@@ -34,6 +34,13 @@ const NavLinks = (props) => {
           <NavLink to="/events/new">New event</NavLink>
         </li>
       )}
+
+      {auth.isLoggedIn && (
+        <li>
+          <NavLink to={`/chat/5fb046ae2c87600db078b583`}>PROBA</NavLink>
+        </li>
+      )}
+
       {!auth.isLoggedIn && (
         <li>
           <NavLink to="/auth">Authenticate</NavLink>
