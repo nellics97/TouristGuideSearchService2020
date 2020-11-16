@@ -85,11 +85,21 @@ const createEvent = async (req, res, next) => {
   //  );
   //}
 
-  const { title, place, description, attendees, creator } = req.body;
-  console.log(req.title);
-  const createdEvent = new Event({
+  const {
+    guide,
     title,
     place,
+    date,
+    description,
+    attendees,
+    creator,
+  } = req.body;
+  console.log(req.title);
+  const createdEvent = new Event({
+    guide,
+    title,
+    place,
+    date,
     description,
     attendees,
     creator: req.userData.userId,

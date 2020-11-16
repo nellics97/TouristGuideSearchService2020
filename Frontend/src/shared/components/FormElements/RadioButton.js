@@ -21,6 +21,14 @@ class RadioButton extends Component {
     console.log(this.state.selectedOption);
   }
 
+  handleChange = (event) => {
+    this.setState({ selectedOption: event.target.value }, () => {
+      if (this.props.onChange) {
+        this.props.onChange(this.state);
+      }
+    });
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -31,7 +39,7 @@ class RadioButton extends Component {
               type="radio"
               value="TouristGuide"
               checked={this.state.selectedOption === "TouristGuide"}
-              onChange={this.onValueChange}
+              onChange={this.handleChange}
             />
             TouristGuide
           </label>
@@ -42,7 +50,7 @@ class RadioButton extends Component {
               type="radio"
               value="Tourist"
               checked={this.state.selectedOption === "Tourist"}
-              onChange={this.onValueChange}
+              onChange={this.handleChange}
             />
             Tourist
           </label>

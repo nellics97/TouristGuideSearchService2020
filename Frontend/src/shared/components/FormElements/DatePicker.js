@@ -6,7 +6,7 @@ import "react-day-picker/lib/style.css";
 export default class DatePicker extends React.Component {
   constructor(props) {
     super(props);
-    this.handleDayClick = this.handleDayClick.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.state = {
       selectedDay: undefined,
     };
@@ -18,12 +18,21 @@ export default class DatePicker extends React.Component {
     //this.props.parentCallback(day.toLocaleDateString());
   }
 
+  handleChange = (event) => {
+    this.setState({ selectedDay: event }, () => {
+      if (this.props.onChange) {
+        this.props.onChange(this.state);
+      }
+    });
+  };
+
   render() {
     return (
       <div>
         <DayPicker
-          onDayClick={this.handleDayClick}
+          onDayClick={this.handleChange}
           selectedDays={this.state.selectedDay}
+          onChange={this.handleChange}
         />
         {this.state.selectedDay ? (
           <p>You clicked {this.state.selectedDay.toLocaleDateString()}</p>
