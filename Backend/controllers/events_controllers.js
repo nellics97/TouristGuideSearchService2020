@@ -152,7 +152,16 @@ const updateEvent = async (req, res, next) => {
     );
   }
 
-  const { title, place, description, attendees, creator } = req.body;
+  const {
+    guide,
+    title,
+    tags,
+    place,
+    date,
+    description,
+    attendees,
+    creator,
+  } = req.body;
   const eventId = req.params.eid;
 
   let event;
@@ -174,7 +183,10 @@ const updateEvent = async (req, res, next) => {
     return next(error);
   }
 
+  event.guide = guide;
   event.title = title;
+  event.tags = tags;
+  event.date = date;
   event.description = description;
   event.place = place;
   event.attendees = attendees;

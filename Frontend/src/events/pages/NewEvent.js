@@ -28,7 +28,6 @@ const NewEvent = () => {
   const [guideValue, setGuideValue] = useState();
   const [dateValue, setDateValue] = useState();
   const [tagsValue, setTagsValue] = useState([]);
-  let tagList = [];
 
   const [formState, inputHandler] = useForm(
     {
@@ -89,16 +88,13 @@ const NewEvent = () => {
   };
 
   const datePickerEventHandler = (data) => {
-    setDateValue(data.selectedDay.toLocaleDateString());
+    setDateValue(data.selectedDay);
   };
 
   const tagsEventHandler = (data) => {
-    //tagList.push(data.tags[data.tags.length - 1].displayValue);
-    //console.log(tagList);
     setTagsValue((tagsValue) =>
       tagsValue.concat(data.tags[data.tags.length - 1].displayValue)
     );
-    console.log(tagsValue);
   };
 
   useEffect(() => {
@@ -116,7 +112,13 @@ const NewEvent = () => {
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />
-      <form className="event-form" onSubmit={eventCreatorHandler}>
+      <form
+        className="event-form"
+        onSubmit={eventCreatorHandler}
+        onKeyPress={(e) => {
+          e.key === "Enter" && e.preventDefault();
+        }}
+      >
         {isLoading && <LoadingSpinner asOverlay />}
         <RadioButton
           id="guide"

@@ -6,6 +6,9 @@ import Button from "../../shared/components/FormElements/Button";
 import Card from "../../shared/components/UIElements/Card";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import TagPicker from "../../shared/components/FormElements/TagPicker";
+import RadioButton from "../../shared/components/FormElements/RadioButton";
+import DatePicker from "../../shared/components/FormElements/DatePicker";
 import {
   VALIDATOR_REQUIRE,
   VALIDATOR_MINLENGTH,
@@ -21,7 +24,10 @@ const UpdateEvent = () => {
   const auth = useContext(AuthContext);
   const eventId = useParams().eventId;
   const history = useHistory();
-  console.log(eventId);
+
+  const [guideValue, setGuideValue] = useState();
+  const [dateValue, setDateValue] = useState();
+  const [tagsValue, setTagsValue] = useState([]);
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -54,12 +60,24 @@ const UpdateEvent = () => {
         setLoadedEvent(responseData.event);
         setFormData(
           {
+            guide: {
+              value: responseData.event.guide,
+              isValid: true,
+            },
             title: {
               value: responseData.event.title,
               isValid: true,
             },
+            tags: {
+              value: responseData.event.tags,
+              isValid: true,
+            },
             place: {
               value: responseData.event.place,
+              isValid: true,
+            },
+            date: {
+              value: responseData.event.date,
               isValid: true,
             },
             description: {
@@ -85,8 +103,11 @@ const UpdateEvent = () => {
         `http://localhost:5000/api/events/${eventId}/update`,
         "PATCH",
         JSON.stringify({
+          guide: guideValue,
           title: formState.inputs.title.value,
+          tags: tagsValue,
           place: formState.inputs.place.value,
+          date: dateValue,
           description: formState.inputs.description.value,
           attendees: formState.inputs.attendees.value,
         }),
@@ -99,6 +120,36 @@ const UpdateEvent = () => {
       history.push("/"); //majd az event oldalara iranyitsd
     } catch (err) {}
   };
+
+  const radioButtonEventhandler = (data) => {
+    if (data.selectedOption === "TouristGuide") {
+      setGuideValue(true);
+    } else {
+      setGuideValue(false);
+    }
+  };
+
+  const datePickerEventHandler = (data) => {
+    setDateValue(data.selectedDay.toLocaleDateString());
+  };
+
+  const tagsEventHandler = (data) => {
+    setTagsValue((tagsValue) =>
+      tagsValue.concat(data.tags[data.tags.length - 1].displayValue)
+    );
+  };
+
+  useEffect(() => {
+    console.log(guideValue);
+  }, [guideValue]);
+
+  useEffect(() => {
+    console.log(dateValue);
+  }, [dateValue]);
+
+  useEffect(() => {
+    console.log(tagsValue);
+  }, [tagsValue]);
 
   if (isLoading) {
     return (
@@ -122,7 +173,14 @@ const UpdateEvent = () => {
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />
       {!isLoading && loadedEvent && (
-        <form className="event-form" onSubmit={eventUpdateSubmitHandler}>
+        <form
+          className="event-form"
+          onSubmit={eventUpdateSubmitHandler}
+          onKeyPress={(e) => {
+            e.key === "Enter" && e.preventDefault();
+          }}
+        >
+          <RadioButton id="guide" onChange={radioButtonEventhandler} />
           <Input
             id="title"
             element="input"
@@ -134,6 +192,9 @@ const UpdateEvent = () => {
             value={loadedEvent.title}
             valid={true}
           />
+          <h4>You can change tags</h4>
+          <br></br>
+          <TagPicker id="tags" onChange={tagsEventHandler} />
           <Input
             id="place"
             element="input"
@@ -144,6 +205,12 @@ const UpdateEvent = () => {
             onInput={inputHandler}
             value={loadedEvent.place}
             valid={true}
+          />
+          <h4>Date</h4>
+          <DatePicker
+            id="date"
+            onChange={datePickerEventHandler}
+            validators={[VALIDATOR_REQUIRE()]}
           />
           <Input
             id="description"
