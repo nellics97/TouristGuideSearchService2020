@@ -33,12 +33,8 @@ export default class DatePicker extends React.Component {
           onDayClick={this.handleChange}
           selectedDays={this.state.selectedDay}
           onChange={this.handleChange}
+          disabledDays={{ before: new Date() }}
         />
-        {this.state.selectedDay ? (
-          <p>You clicked {this.state.selectedDay.toLocaleDateString()}</p>
-        ) : (
-          <p>Please select a day.</p>
-        )}
       </div>
     );
   }

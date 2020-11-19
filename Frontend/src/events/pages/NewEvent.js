@@ -62,7 +62,7 @@ const NewEvent = () => {
         JSON.stringify({
           guide: guideValue,
           title: formState.inputs.title.value,
-          tags: tagsValue,
+          tags: tagsValue[tagsValue.length - 1],
           place: formState.inputs.place.value,
           date: dateValue,
           description: formState.inputs.description.value,
@@ -92,9 +92,15 @@ const NewEvent = () => {
   };
 
   const tagsEventHandler = (data) => {
-    setTagsValue((tagsValue) =>
-      tagsValue.concat(data.tags[data.tags.length - 1].displayValue)
-    );
+    let tagList = [];
+    for (let i = 0; i < data.tags.length; i++) {
+      tagList.push(data.tags[i].displayValue);
+    }
+    console.log(tagList);
+    //setTagsValue((tagsValue) =>
+    //  tagsValue.concat(data.tags[data.tags.length - 1].displayValue)
+    //);
+    setTagsValue((tagsValue) => [...tagsValue, tagList]);
   };
 
   useEffect(() => {
@@ -107,6 +113,7 @@ const NewEvent = () => {
 
   useEffect(() => {
     console.log(tagsValue);
+    console.log(tagsValue.length);
   }, [tagsValue]);
 
   return (
