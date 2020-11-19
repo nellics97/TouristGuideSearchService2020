@@ -27,7 +27,8 @@ const NewEvent = () => {
 
   const [guideValue, setGuideValue] = useState();
   const [dateValue, setDateValue] = useState();
-  const [tagsValue, setTagsValue] = useState();
+  const [tagsValue, setTagsValue] = useState([]);
+  let tagList = [];
 
   const [formState, inputHandler] = useForm(
     {
@@ -56,19 +57,13 @@ const NewEvent = () => {
     event.preventDefault();
 
     try {
-      //const formData = new FormData();
-      //formData.append("title", formState.inputs.title.value);
-      //formData.append("place", formState.inputs.place.value);
-      //formData.append("description", formState.inputs.description.value);
-      //formData.append("attendees", formState.inputs.attendees.value);
-      //formData.append("creator", auth.userId);
-      console.log(formState.inputs.title.value);
       await sendRequest(
         "http://localhost:5000/api/events",
         "POST",
         JSON.stringify({
           guide: guideValue,
           title: formState.inputs.title.value,
+          tags: tagsValue,
           place: formState.inputs.place.value,
           date: dateValue,
           description: formState.inputs.description.value,
@@ -98,12 +93,12 @@ const NewEvent = () => {
   };
 
   const tagsEventHandler = (data) => {
-    //let tagList = [];
-    //tagList.push(data[data.length - 1].displayValue);
+    //tagList.push(data.tags[data.tags.length - 1].displayValue);
     //console.log(tagList);
-    //for (let i = 0; i < tagList.length; i++) {
-    console.log(data.length);
-    //}
+    setTagsValue((tagsValue) =>
+      tagsValue.concat(data.tags[data.tags.length - 1].displayValue)
+    );
+    console.log(tagsValue);
   };
 
   useEffect(() => {
@@ -114,9 +109,9 @@ const NewEvent = () => {
     console.log(dateValue);
   }, [dateValue]);
 
-  //useEffect(() => {
-  //  console.log(dateValue);
-  //}, [dateValue]);
+  useEffect(() => {
+    console.log(tagsValue);
+  }, [tagsValue]);
 
   return (
     <React.Fragment>
@@ -137,6 +132,9 @@ const NewEvent = () => {
           errorText="Please enter valid title"
           onInput={inputHandler}
         />
+        <h4>You can add tags</h4>
+        <br></br>
+        <TagPicker id="tags" onChange={tagsEventHandler} />
         <Input
           id="place"
           element="input"
@@ -170,11 +168,6 @@ const NewEvent = () => {
           errorText="Please enter valid number"
           onInput={inputHandler}
         />
-        <h4>You can add tags</h4>
-
-        <br></br>
-        <TagPicker id="tags" onChange={tagsEventHandler} />
-
         <br></br>
         <Button type="submit" disabled={!formState.isValid}>
           Create event

@@ -10,7 +10,7 @@ class TagPicker extends React.Component {
   }
 
   handleChange = (tags) => {
-    this.setState(tags, () => {
+    this.setState({ tags: tags }, () => {
       if (this.props.onChange) {
         this.props.onChange(this.state);
       }

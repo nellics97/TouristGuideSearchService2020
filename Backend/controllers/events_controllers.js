@@ -88,6 +88,7 @@ const createEvent = async (req, res, next) => {
   const {
     guide,
     title,
+    tags,
     place,
     date,
     description,
@@ -98,6 +99,7 @@ const createEvent = async (req, res, next) => {
   const createdEvent = new Event({
     guide,
     title,
+    tags,
     place,
     date,
     description,
