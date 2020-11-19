@@ -12,7 +12,7 @@
   text-decoration: none;
   padding: 2rem;
   color: white;
-  background: #6f107096;
+  background: #661313;
 }
 
 .user-item a:hover,
@@ -34,14 +34,14 @@
   font-size: 1.5rem;
   margin: 0 0 0.5rem 0;
   font-weight: normal;
-  color: white;
+  color: #ffefa6;
 }
 
 .user-item:hover h2,
 .user-item:active h2,
 .user-item:hover h3,
 .user-item:active h3 {
-  color: #c718c9;
+  color: #dd9463;
 }
 
 .user-item__info h3 {

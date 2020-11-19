@@ -10,8 +10,8 @@ html {
 
 body {
   margin: 0;
-  background: #fba6ff;
-  background: linear-gradient(90deg, #fdccff 0%, #e6a6ff 100%);
+  background: #ffffff;
+  background: linear-gradient(90deg, #ffffff 0%, #ffefa6 100%);
 }
 
 .slide-in-left-enter {
