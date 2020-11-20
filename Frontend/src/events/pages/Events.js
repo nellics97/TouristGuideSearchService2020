@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useHistory } from "react";
 
 import EventList from "../components/EventList";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
@@ -37,6 +37,29 @@ const Events = () => {
     );
   };
 
+  const eventFilterHandler = async (event) => {
+    event.preventDefault();
+    setShowModal(false);
+    if (!isLoading && loadedEvents) {
+      try {
+        await sendRequest(
+          `http://localhost:5000/api/events/filter`,
+          "POST",
+          JSON.stringify({
+            guide: guideValue,
+            tags: tagsValue[tagsValue.length - 1],
+            dates: datesValue[datesValue.length - 1],
+          }),
+          {
+            "Content-Type": "application/json",
+          }
+        );
+
+        //window.location.reload();
+      } catch (err) {}
+    }
+  };
+
   const radioButtonEventhandler = (data) => {
     if (data.selectedOption === "TouristGuide") {
       setGuideValue(true);
@@ -57,7 +80,7 @@ const Events = () => {
     let daysList = [];
     console.log(data.selectedDays);
     for (let i = 0; i < data.selectedDays.length; i++) {
-      daysList.push(data.selectedDays[i]);
+      daysList.push(new Date(data.selectedDays[i]).toLocaleDateString());
     }
     setDatesValue((datesValue) => [...datesValue, daysList]);
   };
@@ -118,7 +141,13 @@ const Events = () => {
                   <Button inverse onClick={cancelReviewHandler}>
                     Cancel
                   </Button>
-                  <Button type="submit">Ok</Button>
+                  <Button
+                    onClick={eventFilterHandler}
+                    onSubmit={eventFilterHandler}
+                    type="submit"
+                  >
+                    Ok
+                  </Button>
                 </React.Fragment>
               }
             ></Modal>

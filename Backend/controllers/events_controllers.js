@@ -37,11 +37,10 @@ const filterEvents = async (req, res, next) => {
   }
 
   let filteredEvents = [];
+  let tmpList = [];
 
   const { guide, tags, dates } = req.body;
-
   try {
-    let tmpList = [];
     for (let i = 0; i < events.length; i++) {
       if (events[i].guide.toString() === guide.toString()) {
         for (let j = 0; j < tags.length; j++) {
@@ -64,7 +63,7 @@ const filterEvents = async (req, res, next) => {
     console.log(filteredEvents);
   } catch (err) {
     const error = new HttpError(
-      "Fetching events failed, please try again later.",
+      "Fetching events failed, please try again later.rgtrgtr",
       500
     );
     return next(error);
