@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useHistory } from "react";
+import React, { useEffect, useState } from "react";
 
 import EventList from "../components/EventList";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
@@ -18,6 +18,8 @@ const Events = () => {
   const [guideValue, setGuideValue] = useState();
   const [tagsValue, setTagsValue] = useState([]);
   const [datesValue, setDatesValue] = useState([]);
+  const [isFiltered, setFiltered] = useState(false);
+  const [filteredEvents, setFilteredEvents] = useState();
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -40,24 +42,28 @@ const Events = () => {
   const eventFilterHandler = async (event) => {
     event.preventDefault();
     setShowModal(false);
-    if (!isLoading && loadedEvents) {
-      try {
-        await sendRequest(
-          `http://localhost:5000/api/events/filter`,
-          "POST",
-          JSON.stringify({
-            guide: guideValue,
-            tags: tagsValue[tagsValue.length - 1],
-            dates: datesValue[datesValue.length - 1],
-          }),
-          {
-            "Content-Type": "application/json",
-          }
-        );
-
-        //window.location.reload();
-      } catch (err) {}
-    }
+    const fetchFilteredEvents = async () => {
+      if (!isLoading && loadedEvents) {
+        try {
+          const responseData = await sendRequest(
+            `http://localhost:5000/api/events/filter`,
+            "POST",
+            JSON.stringify({
+              guide: guideValue,
+              tags: tagsValue[tagsValue.length - 1],
+              dates: datesValue[datesValue.length - 1],
+            }),
+            {
+              "Content-Type": "application/json",
+            }
+          );
+          setFilteredEvents(responseData.events);
+          setFiltered(true);
+          //window.location.reload();
+        } catch (err) {}
+      }
+    };
+    fetchFilteredEvents();
   };
 
   const radioButtonEventhandler = (data) => {
@@ -152,7 +158,19 @@ const Events = () => {
               }
             ></Modal>
           </form>
-          <EventList items={loadedEvents} onDeleteEvent={eventDeleteHandler} />)
+          {!isFiltered && (
+            <EventList
+              items={loadedEvents}
+              onDeleteEvent={eventDeleteHandler}
+            />
+          )}
+          {isFiltered && (
+            <EventList
+              items={filteredEvents}
+              onDeleteEvent={eventDeleteHandler}
+            />
+          )}
+          )
         </React.Fragment>
       )}
     </React.Fragment>
