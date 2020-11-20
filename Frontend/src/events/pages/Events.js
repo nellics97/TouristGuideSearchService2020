@@ -7,13 +7,17 @@ import { useHttpClient } from "../../shared/hooks/http-hook";
 import TagPicker from "../../shared/components/FormElements/TagPicker";
 import Button from "../../shared/components/FormElements/Button";
 import Modal from "../../shared/components/UIElements/Modal";
-import DatePicker from "../../shared/components/FormElements/DatePicker";
+import MultipleDaysPicker from "../../shared/components/FormElements/MultipleDaysPicker";
+import RadioButton from "../../shared/components/FormElements/RadioButton";
+import "./Events.css";
 
 const Events = () => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedEvents, setLoadedEvents] = useState();
   const [showModal, setShowModal] = useState(false);
+  const [guideValue, setGuideValue] = useState();
   const [tagsValue, setTagsValue] = useState([]);
+  const [datesValue, setDatesValue] = useState([]);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -33,6 +37,14 @@ const Events = () => {
     );
   };
 
+  const radioButtonEventhandler = (data) => {
+    if (data.selectedOption === "TouristGuide") {
+      setGuideValue(true);
+    } else {
+      setGuideValue(false);
+    }
+  };
+
   const tagsEventHandler = (data) => {
     let tagList = [];
     for (let i = 0; i < data.tags.length; i++) {
@@ -41,9 +53,26 @@ const Events = () => {
     setTagsValue((tagsValue) => [...tagsValue, tagList]);
   };
 
+  const datePickerEventHandler = (data) => {
+    let daysList = [];
+    console.log(data.selectedDays);
+    for (let i = 0; i < data.selectedDays.length; i++) {
+      daysList.push(data.selectedDays[i]);
+    }
+    setDatesValue((datesValue) => [...datesValue, daysList]);
+  };
+
+  useEffect(() => {
+    console.log(guideValue);
+  }, [guideValue]);
+
   useEffect(() => {
     console.log(tagsValue);
   }, [tagsValue]);
+
+  useEffect(() => {
+    console.log(datesValue);
+  }, [datesValue]);
 
   const showModalHandler = () => {
     setShowModal(true);
@@ -65,7 +94,9 @@ const Events = () => {
       )}
       {!isLoading && loadedEvents && (
         <React.Fragment>
-          <Button onClick={showModalHandler}>Filter Events</Button>
+          <div className="centered-button-container">
+            <Button onClick={showModalHandler}>Filter Events</Button>
+          </div>
           <form
             onKeyPress={(e) => {
               e.key === "Enter" && e.preventDefault();
@@ -79,8 +110,11 @@ const Events = () => {
               footer={
                 <React.Fragment>
                   <TagPicker id="tags" onChange={tagsEventHandler} />
-                  <DatePicker id="date" className="center" />
-
+                  <RadioButton id="guide" onChange={radioButtonEventhandler} />
+                  <MultipleDaysPicker
+                    id="date"
+                    onChange={datePickerEventHandler}
+                  />
                   <Button inverse onClick={cancelReviewHandler}>
                     Cancel
                   </Button>

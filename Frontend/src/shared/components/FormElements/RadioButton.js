@@ -55,8 +55,6 @@ class RadioButton extends Component {
             Tourist
           </label>
         </div>
-        <div className="radio"></div>
-        <div>Selected option is : {this.state.selectedOption}</div>
       </React.Fragment>
     );
   }

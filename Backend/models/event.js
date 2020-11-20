@@ -6,7 +6,7 @@ const eventSchema = new Schema({
   guide: { type: Boolean, required: false },
   title: { type: String, required: true },
   place: { type: String, required: true },
-  date: { type: Date, required: false },
+  date: { type: String, required: false },
   description: { type: String, required: true },
   attendees: { type: Number, required: true },
   tags: [{ type: String, required: false }],

@@ -24,6 +24,63 @@ const getEvents = async (req, res, next) => {
   });
 };
 
+const filterEvents = async (req, res, next) => {
+  let events;
+  try {
+    events = await Event.find();
+  } catch (err) {
+    const error = new HttpError(
+      "Fetching events failed, please try again later. itt romlott el",
+      500
+    );
+    return next(error);
+  }
+
+  let filteredEvents = [];
+
+  const { guide, tags, dates } = req.body;
+
+  try {
+    let tmpList = [];
+    for (let i = 0; i < events.length; i++) {
+      if (events[i].guide.toString() === guide.toString()) {
+        for (let j = 0; j < tags.length; j++) {
+          if (
+            events[i].tags.includes(tags[j].toString()) ||
+            events[i].place.includes(tags[j].toString())
+          ) {
+            tmpList.push(events[i]);
+          }
+        }
+      }
+      for (let i = 0; i < tmpList.length; i++) {
+        for (let j = 0; j < dates.length; j++) {
+          if (tmpList[i].date.toString() === dates[j].toString()) {
+            filteredEvents.push(tmpList[i]);
+          }
+        }
+      }
+    }
+    console.log(filteredEvents);
+  } catch (err) {
+    const error = new HttpError(
+      "Fetching events failed, please try again later.",
+      500
+    );
+    return next(error);
+  }
+
+  if (!filteredEvents || filteredEvents.length === 0) {
+    return next(
+      new HttpError("Could not find events with these constriants.", 404)
+    );
+  }
+
+  res.json({
+    events: filteredEvents.map((event) => event.toObject({ getters: true })),
+  });
+};
+
 const getEventById = async (req, res, next) => {
   const eventId = req.params.eid;
 
@@ -95,7 +152,6 @@ const createEvent = async (req, res, next) => {
     attendees,
     creator,
   } = req.body;
-  console.log(req.title);
   const createdEvent = new Event({
     guide,
     title,
@@ -328,6 +384,7 @@ const deleteEvent = async (req, res, next) => {
 };
 
 exports.getEvents = getEvents;
+exports.filterEvents = filterEvents;
 exports.getEventById = getEventById;
 exports.getEventsByUserId = getEventsByUserId;
 exports.createEvent = createEvent;

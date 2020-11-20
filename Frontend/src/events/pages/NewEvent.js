@@ -88,7 +88,7 @@ const NewEvent = () => {
   };
 
   const datePickerEventHandler = (data) => {
-    setDateValue(data.selectedDay);
+    setDateValue(new Date(data.selectedDay).toLocaleDateString());
   };
 
   const tagsEventHandler = (data) => {

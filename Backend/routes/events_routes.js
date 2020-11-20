@@ -8,6 +8,8 @@ const router = express.Router();
 
 router.get("/", eventsControllers.getEvents);
 
+router.get("/filter", eventsControllers.filterEvents);
+
 router.get("/:eid", eventsControllers.getEventById);
 
 router.get("/user/:uid", eventsControllers.getEventsByUserId);
