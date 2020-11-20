@@ -71,6 +71,13 @@ const EventProfile = (props) => {
     } catch (err) {}
   };
 
+  let lookingFor = "";
+  if (!isLoading && loadedEvent && loadedEvent.guide) {
+    lookingFor = "tourist";
+  } else {
+    lookingFor = "tourist guide";
+  }
+
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />
@@ -99,10 +106,14 @@ const EventProfile = (props) => {
             {!isLoading && loadedEvent && (
               <React.Fragment>
                 <h2>{loadedEvent.title}</h2>
-                <h3>{loadedEvent.place}</h3>
+                <h3>Looking for a {lookingFor}</h3>
+                <h3>tags: {loadedEvent.tags}</h3>
+                <h3>place: {loadedEvent.place}</h3>
+                <h3>date: {loadedEvent.date}</h3>
+                <h3>description:</h3>
                 <h3>{loadedEvent.description}</h3>
-                <h3>{loadedEvent.attendees}</h3>
-                <h3>{loadedEvent.creator}</h3>
+                <h3>number of attendees: {loadedEvent.attendees}</h3>
+                <h3>creator: {loadedEvent.creator}</h3>
               </React.Fragment>
             )}
           </div>

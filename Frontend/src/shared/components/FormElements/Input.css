@@ -26,16 +26,16 @@
 .form-control textarea:focus {
   outline: none;
   background: #ebebeb;
-  border-color: #510077;
+  border-color: #661313;
 }
 
 .form-control--invalid label,
 .form-control--invalid p {
-  color: #ff00b3;
+  color: #ff0000;
 }
 
 .form-control--invalid input,
 .form-control--invalid textarea {
-  border-color: #ff00b3;
-  background: #ffd1d1;
+  border-color: #ff0000;
+  background: #ff9e9e;
 }

@@ -35,7 +35,7 @@ const MainNavigation = (props) => {
           <span />
         </button>
         <h1 className="main-navigation__title">
-          <Link to="/"> Tourist - Guide Connecter </Link>
+          <Link to="/"> Tourist - Guide Connector </Link>
         </h1>
         <nav className="main-navigation__header-nav">
           <NavLinks />
