@@ -23,8 +23,9 @@ router.post(
 
 router.post("/login", usersController.login);
 
-router.patch(
+router.post(
   "/:uid/update",
+  fileUpload.single("image"),
   [
     check("name").not().isEmpty(),
     check("email").normalizeEmail().isEmail(),

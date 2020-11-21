@@ -6,6 +6,7 @@ import Button from "../../shared/components/FormElements/Button";
 import Card from "../../shared/components/UIElements/Card";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import ImageUpload from "../../shared/components/FormElements/ImageUpload";
 import {
   VALIDATOR_REQUIRE,
   VALIDATOR_MINLENGTH,
@@ -21,6 +22,7 @@ const UpdateProfile = () => {
   const auth = useContext(AuthContext);
   const userId = useParams().userId;
   const history = useHistory();
+  const [imageData, setImageData] = useState();
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -57,6 +59,10 @@ const UpdateProfile = () => {
               value: responseData.user.email,
               isValid: true,
             },
+            image: {
+              value: "",
+              isValid: true,
+            },
             description: {
               value: responseData.user.description,
               isValid: true,
@@ -71,24 +77,36 @@ const UpdateProfile = () => {
 
   const eventUpdateSubmitHandler = async (event) => {
     event.preventDefault();
+    getBase64();
     try {
+      //const formData = new FormData();
+      //formData.set("name", formState.inputs.name.value);
+      //formData.set("email", formState.inputs.email.value);
+      //formData.set("description", formState.inputs.description.value);
+      //formData.append("image", formState.inputs.image.value);
       await sendRequest(
         `http://localhost:5000/api/users/${userId}/update`,
-        "PATCH",
+        "POST",
         JSON.stringify({
           name: formState.inputs.name.value,
           email: formState.inputs.email.value,
+          //image: imageData,
           description: formState.inputs.description.value,
         }),
+        //formData,
         {
           Authorization: "Bearer " + auth.token,
           "Content-Type": "application/json",
         }
       );
-      console.log(sendRequest);
+      console.log(imageData);
       history.push("/");
     } catch (err) {}
   };
+
+  useEffect(() => {
+    console.log(imageData);
+  }, [imageData]);
 
   if (isLoading) {
     return (
@@ -106,6 +124,19 @@ const UpdateProfile = () => {
         </Card>
       </div>
     );
+  }
+
+  function getBase64() {
+    let img = formState.inputs.image.value;
+    var reader = new FileReader();
+    reader.readAsDataURL(img);
+    reader.onload = function () {
+      setImageData(reader.result);
+      //console.log(reader.result);
+    };
+    reader.onerror = function (error) {
+      console.log("Error: ", error);
+    };
   }
 
   return (
@@ -135,6 +166,7 @@ const UpdateProfile = () => {
             value={loadedUser.email}
             valid={true}
           />
+          <ImageUpload center id="image" onInput={inputHandler} />
           <Input
             id="description"
             element="textarea"

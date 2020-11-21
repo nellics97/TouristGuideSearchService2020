@@ -119,12 +119,22 @@ const getEventsByUserId = async (req, res, next) => {
     return next(error);
   }
 
-  console.log(userWithEvents);
+  //console.log(userWithEvents.events.length);
   if (!userWithEvents || userWithEvents.events.length === 0) {
     return next(
       new HttpError("Could not find eventss for the provided user id.", 404)
     );
   }
+  //todo
+  //  let participantWithEvents = [];
+  //  for (var i = 0; i < userWithEvents.events.length; i++) {
+  //    for (var j = 0; j < userWithEvents.events[i].participant.length; j++) {
+  //if (){
+  //      participantWithEvents.push(userWithEvents.events);
+  //      console.log(userWithEvents.events[i].participant);
+  //    }
+  //  }}
+  //  console.log(participantWithEvents);
 
   res.json({
     events: userWithEvents.events.map((event) =>

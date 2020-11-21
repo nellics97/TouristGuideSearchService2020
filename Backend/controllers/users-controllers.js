@@ -191,7 +191,7 @@ const updateUser = async (req, res, next) => {
     );
   }
 
-  const { name, email, description, password } = req.body;
+  const { name, email, description, password, image } = req.body;
   const userId = req.params.uid;
 
   let user;
@@ -205,20 +205,22 @@ const updateUser = async (req, res, next) => {
     return next(error);
   }
 
-  //console.log("ttest");
-  //console.log(user.userId);
-  //console.log(req.userData.userId);
-  //if (user.userId !== req.userData.userId) {
-  //  const error = new HttpError(
-  //    "You really shouldn't edit other users' profile!",
-  //    403
-  //  );
-  //  return next(error);
-  //}
+  // let base64String = "image";
+  // console.log(name);
+  //let base64Image = base64String.split(";base64,").pop();
+  //fs.writeFile(
+  //  "uploads/images/image.png",
+  //  base64Image,
+  //  { encoding: "base64" },
+  //  function (err) {
+  //    console.log("File created");
+  //  }
+  //);
 
   user.name = name;
   user.email = email;
   user.description = description;
+  // user.image = base64Image;
 
   try {
     await user.save();
