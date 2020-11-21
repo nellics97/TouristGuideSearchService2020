@@ -37,7 +37,7 @@ const NavLinks = (props) => {
 
       {auth.isLoggedIn && (
         <li>
-          <NavLink to={`/chat/5fb046ae2c87600db078b583`}>PROBA</NavLink>
+          <NavLink to={`/chat/5fb7e8a15513d04750b9adf8`}>PROBA</NavLink>
         </li>
       )}
 

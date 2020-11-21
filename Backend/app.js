@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const usersRoutes = require("./routes/users-routes");
 const eventsRoutes = require("./routes/events_routes");
 const reviewRoutes = require("./routes/reviews-routes");
+const chatRoutes = require("./routes/chat-routes");
 const HttpError = require("./models/http-error");
 
 const app = express();
@@ -28,6 +29,7 @@ app.use((req, res, next) => {
 app.use("/api/users", usersRoutes);
 app.use("/api/events", eventsRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/chat", chatRoutes);
 
 app.use((req, res, next) => {
   const error = new HttpError("Could not find this route.>:(", 404);

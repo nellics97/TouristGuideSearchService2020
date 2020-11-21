@@ -1,77 +1,98 @@
-import axios from "axios";
+import React, { useEffect, useState, useContext } from "react";
+import { useParams } from "react-router-dom";
 
-import React, { Component } from "react";
+import { useHttpClient } from "../shared/hooks/http-hook";
+import { AuthContext } from "../shared/context/auth-context";
+import { useForm } from "../shared/hooks/form-hook";
+import Input from "../shared/components/FormElements/Input";
+import Button from "../shared/components/FormElements/Button";
+import MessageList from "./MessageList";
+import { VALIDATOR_REQUIRE } from "../shared/util/validators";
 
-class Chat extends Component {
-  state = {
-    // Initially, no file is selected
-    selectedFile: null,
-  };
+const Chat = () => {
+  const eventId = useParams().eventId;
+  const auth = useContext(AuthContext);
+  const { isLoading, sendRequest } = useHttpClient();
+  const [loadedMessages, setLoadedMessages] = useState();
 
-  // On file select (from the pop up)
-  onFileChange = (event) => {
-    // Update the state
-    this.setState({ selectedFile: event.target.files[0] });
-  };
+  const [formState, inputHandler] = useForm(
+    {
+      newMessage: {
+        value: "",
+        isValid: false,
+      },
+    },
+    true
+  );
 
-  // On file upload (click the upload button)
-  onFileUpload = () => {
-    // Create an object of formData
-    const formData = new FormData();
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const responseData = await sendRequest(
+          `http://localhost:5000/api/chat/${eventId}`
+        );
+        setLoadedMessages(responseData.messages);
+      } catch (err) {}
+    };
+    fetchMessages();
+  }, [sendRequest, eventId]);
 
-    // Update the formData object
-    formData.append(
-      "myFile",
-      this.state.selectedFile,
-      this.state.selectedFile.name
-    );
-
-    // Details of the uploaded file
-    console.log(this.state.selectedFile);
-
-    // Request made to the backend api
-    // Send formData object
-    axios.post("api/uploadfile", formData);
-  };
-
-  // File content to be displayed after
-  // file upload is complete
-  fileData = () => {
-    if (this.state.selectedFile) {
-      return (
-        <div>
-          <h2>File Details:</h2>
-          <p>File Name: {this.state.selectedFile.name}</p>
-          <p>File Type: {this.state.selectedFile.type}</p>
-          <p>
-            Last Modified:{" "}
-            {this.state.selectedFile.lastModifiedDate.toDateString()}
-          </p>
-        </div>
+  const newMessageHandler = async (event) => {
+    event.preventDefault();
+    var today = new Date();
+    var date =
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate();
+    var time =
+      today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var dateTime = date + " " + time;
+    try {
+      await sendRequest(
+        `http://localhost:5000/api/chat/${eventId}`,
+        "POST",
+        JSON.stringify({
+          event: eventId,
+          author: auth.userId,
+          text: formState.inputs.newMessage.value,
+          time: dateTime,
+        }),
+        {
+          Authorization: "Bearer " + auth.token,
+          "Content-Type": "application/json",
+        }
       );
-    } else {
-      return (
-        <div>
-          <br />
-          <h4>Choose before Pressing the Upload button</h4>
-        </div>
-      );
-    }
+    } catch (err) {}
   };
 
-  render() {
-    return (
+  return (
+    <div>
+      <h1>Chat</h1>
+      {loadedMessages && <MessageList items={loadedMessages} />}
       <div>
-        <h1>GeeksforGeeks</h1>
-        <h3>File Upload using React!</h3>
-        <div>
-          <input type="file" onChange={this.onFileChange} />
-          <button onClick={this.onFileUpload}>Upload!</button>
-        </div>
-        {this.fileData()}
+        <form onSubmit={newMessageHandler}>
+          <Input
+            id="newMessage"
+            element="input"
+            type="text"
+            label="Your Message"
+            validators={[VALIDATOR_REQUIRE()]}
+            onInput={inputHandler}
+          />
+          <Button
+            type="submit"
+            disabled={!formState.isValid}
+            onSubmit={newMessageHandler}
+          >
+            Send
+          </Button>
+        </form>
+        <br></br>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default Chat;

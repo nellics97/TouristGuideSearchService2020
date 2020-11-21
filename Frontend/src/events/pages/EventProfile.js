@@ -67,7 +67,7 @@ const EventProfile = (props) => {
         }
       );
       console.log(sendRequest);
-      history.push("/"); //majd az event oldalara iranyitsd
+      history.push(`/chat/${eventId}`);
     } catch (err) {}
   };
 

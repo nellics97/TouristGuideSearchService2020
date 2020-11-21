@@ -14,6 +14,9 @@ const eventSchema = new Schema({
   participant: [
     { type: mongoose.Types.ObjectId, required: false, ref: "User" },
   ],
+  messages: [
+    { type: mongoose.Types.ObjectId, required: false, ref: "Message" },
+  ],
 });
 
 module.exports = mongoose.model("Event", eventSchema);

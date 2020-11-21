@@ -59,7 +59,6 @@ const Events = () => {
           );
           setFilteredEvents(responseData.events);
           setFiltered(true);
-          //window.location.reload();
         } catch (err) {}
       }
     };

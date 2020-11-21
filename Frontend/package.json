@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.11.0",
     "@pathofdev/react-tag-input": "^1.0.7",
     "@popperjs/core": "^2.5.4",
     "axios": "^0.21.0",
     "formik": "^2.2.1",
+    "material-ui": "^0.20.2",
     "react": "^16.11.0",
     "react-bootstrap": "^1.4.0",
     "react-datepicker": "^3.3.0",
@@ -20,7 +22,8 @@
     "react-scripts": "^3.4.4",
     "react-tag-input": "^6.4.3",
     "react-transition-group": "^4.4.1",
-    "reactjs-tag-input": "^2.0.15"
+    "reactjs-tag-input": "^2.0.15",
+    "socket.io-client": "^3.0.3"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -22,8 +22,6 @@ const getReviewsByUser = async (req, res, next) => {
 };
 
 const postReview = async (req, res, next) => {
-  console.log("psotreview");
-
   const { author, text, receiver } = req.body;
   const createdReview = new Review({
     author,
