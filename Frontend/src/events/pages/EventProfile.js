@@ -66,7 +66,7 @@ const EventProfile = (props) => {
           Authorization: "Bearer " + auth.token,
         }
       );
-      console.log(sendRequest);
+
       history.push(`/chat/${eventId}`);
     } catch (err) {}
   };
@@ -120,8 +120,14 @@ const EventProfile = (props) => {
           <div className="event-item__actions">
             {!isLoading &&
               loadedEvent &&
-              auth.userId !== loadedEvent.creator && (
+              auth.userId !== loadedEvent.creator &&
+              !loadedEvent.participant.includes(auth.userId) && (
                 <Button onClick={ManageAttendeesHandler}>Apply</Button>
+              )}
+            {!isLoading &&
+              loadedEvent &&
+              loadedEvent.participant.includes(auth.userId) && (
+                <Button to={`/chat/${eventId}`}>Chat</Button>
               )}
             {!isLoading &&
               loadedEvent &&
