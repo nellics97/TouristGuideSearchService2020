@@ -15,10 +15,12 @@
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "express-validator": "^6.6.1",
+    "express-ws": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.9",
     "mongoose-unique-validator": "^2.0.3",
     "multer": "^1.4.2",
+    "socket.io": "^3.0.3",
     "uuid": "^8.3.1",
     "uuidv4": "^6.2.4"
   },

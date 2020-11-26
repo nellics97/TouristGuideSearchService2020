@@ -59,5 +59,92 @@ const sendMessage = async (req, res, next) => {
   res.status(201).json({ message: createdMessage });
 };
 
+// TODO: do shit properly -------------------------
+
+const { EventEmitter } = require("events");
+
+class MessageEmitter extends EventEmitter {}
+
+class MessageEvents {
+  static emitter = new MessageEmitter();
+  static async addMessage(eventId, message) {
+    const createdMessage = new Message({
+      event: eventId,
+      author: message.author,
+      text: message.text,
+      time: message.time,
+    });
+
+    try {
+      message = messageToObject(await createdMessage.save());
+    } catch (e) {
+      // TODO
+      console.error(e);
+      return;
+    }
+
+    MessageEvents.emitter.emit(`message:${eventId}`, message);
+  }
+}
+
+function messageToObject(msg) {
+  msg = msg.toObject({ getters: true });
+
+  console.log(msg);
+
+  return {
+    id: msg.id,
+    author: msg.author,
+    text: msg.text,
+    time: msg.time,
+  };
+}
+
+// -------------------------------------------------
+
+exports.handleChatWs = async (socket, req) => {
+  const eventId = req.params.eid;
+  const userId = req.userData.userId;
+
+  try {
+    const messages = (
+      await require("../models/message").find({ event: eventId })
+    ).map(messageToObject);
+
+    socket.send(JSON.stringify(messages));
+  } catch (e) {
+    socket.close();
+  }
+
+  socket.on("message", function (msg) {
+    try {
+      msg = JSON.parse(msg);
+      MessageEvents.addMessage(eventId, {
+        ...msg,
+        author: userId,
+        time: new Date(),
+      });
+    } catch (e) {
+      console.error(e);
+      socket.close();
+    }
+  });
+
+  const listener = (message) => {
+    socket.send(JSON.stringify([message]));
+  };
+
+  MessageEvents.emitter.on(`message:${eventId}`, listener);
+
+  socket.on("close", () => {
+    MessageEvents.emitter.off(`message:${eventId}`, listener);
+  });
+
+  socket.on("error", (e) => {
+    log.error(e);
+    MessageEvents.emitter.off(`message:${eventId}`, listener);
+  });
+};
+
 exports.getMessagesByEventId = getMessagesByEventId;
 exports.sendMessage = sendMessage;

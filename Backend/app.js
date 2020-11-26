@@ -13,6 +13,7 @@ const HttpError = require("./models/http-error");
 const app = express();
 
 app.use(bodyParser.json());
+require("express-ws")(app);
 
 app.use("/uploads/images", express.static(path.join("uploads", "images")));
 

@@ -13,7 +13,7 @@ const Chat = () => {
   const eventId = useParams().eventId;
   const auth = useContext(AuthContext);
   const { isLoading, sendRequest } = useHttpClient();
-  const [loadedMessages, setLoadedMessages] = useState();
+  const [loadedMessages, setLoadedMessages] = useState([]);
 
   const [formState, inputHandler] = useForm(
     {
@@ -25,46 +25,50 @@ const Chat = () => {
     true
   );
 
-  useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const responseData = await sendRequest(
-          `http://localhost:5000/api/chat/${eventId}`
-        );
-        setLoadedMessages(responseData.messages);
-      } catch (err) {}
+  const [ws, setWs] = useState(undefined);
+
+  const connectWs = () => {
+    const ws = new WebSocket(
+      `ws://localhost:5000/api/chat/${eventId}?token=${auth.token}`
+    );
+
+    ws.onmessage = ({ data }) => {
+      const newMessages = JSON.parse(data);
+
+      setLoadedMessages((loadedMessages) => [
+        ...loadedMessages,
+        ...newMessages,
+      ]);
     };
-    fetchMessages();
-  }, [sendRequest, eventId]);
+
+    ws.onclose = (event) => {
+      setWs(undefined);
+      connectWs();
+    };
+
+    ws.onerror = (event) => {
+      // panic
+    };
+
+    setWs(ws);
+  };
+
+  useEffect(connectWs, []);
 
   const newMessageHandler = async (event) => {
     event.preventDefault();
-    var today = new Date();
-    var date =
-      today.getFullYear() +
-      "-" +
-      (today.getMonth() + 1) +
-      "-" +
-      today.getDate();
-    var time =
-      today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    var dateTime = date + " " + time;
-    try {
-      await sendRequest(
-        `http://localhost:5000/api/chat/${eventId}`,
-        "POST",
-        JSON.stringify({
-          event: eventId,
-          author: auth.userId,
-          text: formState.inputs.newMessage.value,
-          time: dateTime,
-        }),
-        {
-          Authorization: "Bearer " + auth.token,
-          "Content-Type": "application/json",
-        }
-      );
-    } catch (err) {}
+
+    if (typeof ws === "undefined") {
+      return;
+    }
+
+    const newMessage = JSON.stringify({
+      event: eventId,
+      author: auth.userId,
+      text: formState.inputs.newMessage.value,
+    });
+
+    ws.send(newMessage);
   };
 
   return (
