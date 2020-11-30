@@ -138,11 +138,17 @@ const Events = () => {
               footer={
                 <React.Fragment>
                   <TagPicker id="tags" onChange={tagsEventHandler} />
-                  <RadioButton id="guide" onChange={radioButtonEventhandler} />
-                  <MultipleDaysPicker
-                    id="date"
-                    onChange={datePickerEventHandler}
-                  />
+                  <div className="filter_component">
+                    <RadioButton
+                      id="guide"
+                      onChange={radioButtonEventhandler}
+                    />
+
+                    <MultipleDaysPicker
+                      id="date"
+                      onChange={datePickerEventHandler}
+                    />
+                  </div>
                   <Button inverse onClick={cancelReviewHandler}>
                     Cancel
                   </Button>

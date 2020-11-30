@@ -84,6 +84,7 @@ const Auth = () => {
       } catch (err) {}
     } else {
       try {
+        console.log(formState.inputs.image.value);
         const formData = new FormData();
         formData.append("name", formState.inputs.name.value);
         formData.append("email", formState.inputs.email.value);

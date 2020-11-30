@@ -59,8 +59,6 @@ const sendMessage = async (req, res, next) => {
   res.status(201).json({ message: createdMessage });
 };
 
-// TODO: do shit properly -------------------------
-
 const { EventEmitter } = require("events");
 
 class MessageEmitter extends EventEmitter {}
@@ -99,8 +97,6 @@ function messageToObject(msg) {
     time: msg.time,
   };
 }
-
-// -------------------------------------------------
 
 exports.handleChatWs = async (socket, req) => {
   const eventId = req.params.eid;

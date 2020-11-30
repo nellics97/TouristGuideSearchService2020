@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 
-import { useHttpClient } from "../shared/hooks/http-hook";
+//import { useHttpClient } from "../shared/hooks/http-hook";
 import { AuthContext } from "../shared/context/auth-context";
 import { useForm } from "../shared/hooks/form-hook";
 import Input from "../shared/components/FormElements/Input";
@@ -12,7 +12,7 @@ import { VALIDATOR_REQUIRE } from "../shared/util/validators";
 const Chat = () => {
   const eventId = useParams().eventId;
   const auth = useContext(AuthContext);
-  const { isLoading, sendRequest } = useHttpClient();
+  //const { isLoading, sendRequest } = useHttpClient();
   const [loadedMessages, setLoadedMessages] = useState([]);
 
   const [formState, inputHandler] = useForm(

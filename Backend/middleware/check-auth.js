@@ -11,8 +11,6 @@ module.exports = (req, res, next) => {
       ? req.query["token"]
       : req.headers.authorization.split(" ")[1];
 
-    //console.log(token);
-    //console.log("fasz");
     if (!token) {
       throw new Error("Authentication failed!");
     }

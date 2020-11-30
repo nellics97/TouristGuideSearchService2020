@@ -277,7 +277,7 @@ const addNewAttendee = async (req, res, next) => {
     );
   }
 
-  const { attendees, creator, participant } = req.body;
+  const { attendees, creator, participant, auth_email } = req.body;
   const eventId = req.params.eid;
   let event;
   try {
@@ -318,6 +318,30 @@ const addNewAttendee = async (req, res, next) => {
     );
     return next(error);
   }
+
+  const sgMail = require("@sendgrid/mail");
+  sgMail.setApiKey(
+    "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"
+  );
+
+  console.log(auth_email);
+  const msg = {
+    to: `{auth_email}`, // Change to your recipient
+    from: "nellics97@gmail.com", // Change to your verified sender
+    subject: "Someone applied to your event",
+    text: "Someone applied to your event, check their profile!",
+    html:
+      "<strong>Someone applied to your event, check their profile!</strong>",
+  };
+
+  sgMail
+    .send(msg)
+    .then(() => {
+      console.log("Email sent");
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 
   res.status(200).json({ event: event.toObject({ getters: true }) });
 };

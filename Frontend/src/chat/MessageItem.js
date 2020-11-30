@@ -1,22 +1,37 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import Card from "../shared/components/UIElements/Card";
 import LoadingSpinner from "../shared/components/UIElements/LoadingSpinner";
 import { useHttpClient } from "../shared/hooks/http-hook";
 
 const MessageItem = (props) => {
-  const { isLoading } = useHttpClient();
+  const { isLoading, sendRequest } = useHttpClient();
+  const [loadedUser, setLoadedUser] = useState();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const responseData = await sendRequest(
+          `http://localhost:5000/api/users/${props.author}`
+        );
+        setLoadedUser(responseData.user);
+      } catch (err) {}
+    };
+    fetchUserData();
+  }, [sendRequest, props.author]);
 
   return (
     <React.Fragment>
       <li>
-        <Card c>
+        <Card>
           {isLoading && <LoadingSpinner asOverLay />}
-          <div>
-            <h3>{props.author}</h3>
-            <p>{props.time}</p>
-            <p>{props.text}</p>
-          </div>
+          {loadedUser && (
+            <div>
+              <h3>{loadedUser.name}</h3>
+              <p>{props.time}</p>
+              <p>{props.text}</p>
+            </div>
+          )}
         </Card>
       </li>
     </React.Fragment>

@@ -16,6 +16,7 @@ const EventProfile = (props) => {
   const auth = useContext(AuthContext);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [loadedEvent, setLoadedEvent] = useState();
+  const [loadedUser, setLoadedUser] = useState();
   const history = useHistory();
 
   useEffect(() => {
@@ -60,16 +61,29 @@ const EventProfile = (props) => {
         "PATCH",
         JSON.stringify({
           participant: auth.userId,
+          auth_email: loadedUser.email,
         }),
         {
           "Content-Type": "application/json",
           Authorization: "Bearer " + auth.token,
         }
       );
-
+      console.log(loadedUser.email);
       history.push(`/chat/${eventId}`);
     } catch (err) {}
   };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const responseData = await sendRequest(
+          `http://localhost:5000/api/users/${loadedEvent.creator}`
+        );
+        setLoadedUser(responseData.user);
+      } catch (err) {}
+    };
+    fetchUserData();
+  }, [sendRequest, loadedEvent]);
 
   let lookingFor = "";
   if (!isLoading && loadedEvent && loadedEvent.guide) {
@@ -103,7 +117,7 @@ const EventProfile = (props) => {
         <Card className="event-item__content">
           {isLoading && <LoadingSpinner asOverLay />}
           <div className="event-item__info">
-            {!isLoading && loadedEvent && (
+            {!isLoading && loadedEvent && loadedUser && (
               <React.Fragment>
                 <h2>{loadedEvent.title}</h2>
                 <h3>Looking for a {lookingFor}</h3>
@@ -113,7 +127,7 @@ const EventProfile = (props) => {
                 <h3>description:</h3>
                 <h3>{loadedEvent.description}</h3>
                 <h3>number of attendees: {loadedEvent.attendees}</h3>
-                <h3>creator: {loadedEvent.creator}</h3>
+                <h3>creator: {loadedUser.name}</h3>
               </React.Fragment>
             )}
           </div>
@@ -126,7 +140,8 @@ const EventProfile = (props) => {
               )}
             {!isLoading &&
               loadedEvent &&
-              loadedEvent.participant.includes(auth.userId) && (
+              (loadedEvent.participant.includes(auth.userId) ||
+                auth.userId === loadedEvent.creator) && (
                 <Button to={`/chat/${eventId}`}>Chat</Button>
               )}
             {!isLoading &&
