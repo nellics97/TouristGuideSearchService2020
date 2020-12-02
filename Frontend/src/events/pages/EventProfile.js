@@ -125,7 +125,7 @@ const EventProfile = (props) => {
                 <h3>place: {loadedEvent.place}</h3>
                 <h3>date: {loadedEvent.date}</h3>
                 <h3>description:</h3>
-                <h3>{loadedEvent.description}</h3>
+                <p>{loadedEvent.description}</p>
                 <h3>number of attendees: {loadedEvent.attendees}</h3>
                 <h3>creator: {loadedUser.name}</h3>
               </React.Fragment>

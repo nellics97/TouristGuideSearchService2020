@@ -42,11 +42,6 @@ const Profile = (props) => {
     setShowModal(false);
   };
 
-  //const confirmReviewHandler = () => {
-  //  setShowModal(false);
-  //  console.log("Review ok");
-  //};
-
   const [formState, inputHandler] = useForm(
     {
       text: {
@@ -104,9 +99,9 @@ const Profile = (props) => {
         </Card>
       </div>
       <div>
-        <Card>
-          <Reviews />
-        </Card>
+        <h2>Reviews: </h2>
+        <Reviews />
+
         {!isLoading && loadedUser && loadedUser.id !== auth.userId && (
           <Button onClick={showModalHandler}>Write Review</Button>
         )}

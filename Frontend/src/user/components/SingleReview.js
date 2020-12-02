@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 
 import Card from "../../shared/components/UIElements/Card";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
@@ -11,6 +11,7 @@ import "../../events/components/EventItem.css";
 const EventItem = (props) => {
   const auth = useContext(AuthContext);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [loadedAuthor, setLoadedAuthor] = useState();
   const { isLoading, sendRequest } = useHttpClient();
   const showDeleteWarningHandler = () => {
     setShowConfirmModal(true);
@@ -33,6 +34,18 @@ const EventItem = (props) => {
       props.onDelete(props.id);
     } catch (err) {}
   };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const responseData = await sendRequest(
+          `http://localhost:5000/api/users/${props.author}`
+        );
+        setLoadedAuthor(responseData.user);
+      } catch (err) {}
+    };
+    fetchUserData();
+  }, [sendRequest, props]);
 
   return (
     <React.Fragment>
@@ -58,7 +71,7 @@ const EventItem = (props) => {
         <Card className="event-item__content">
           {isLoading && <LoadingSpinner asOverLay />}
           <div className="event-item__info">
-            <h3>{props.author}</h3>
+            {loadedAuthor && <h3>{loadedAuthor.name}</h3>}
             <p>{props.text}</p>
           </div>
           {props.author === auth.userId && (

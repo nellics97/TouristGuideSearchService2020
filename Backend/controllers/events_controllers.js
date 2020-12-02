@@ -324,10 +324,9 @@ const addNewAttendee = async (req, res, next) => {
     "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"
   );
 
-  console.log(auth_email);
   const msg = {
-    to: `{auth_email}`, // Change to your recipient
-    from: "nellics97@gmail.com", // Change to your verified sender
+    to: `{auth_email}`,
+    from: "nellics97@gmail.com",
     subject: "Someone applied to your event",
     text: "Someone applied to your event, check their profile!",
     html:
