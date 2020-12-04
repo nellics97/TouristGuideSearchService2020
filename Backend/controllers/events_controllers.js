@@ -320,9 +320,7 @@ const addNewAttendee = async (req, res, next) => {
   }
 
   const sgMail = require("@sendgrid/mail");
-  sgMail.setApiKey(
-    "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"
-  );
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
   const msg = {
     to: `{auth_email}`,

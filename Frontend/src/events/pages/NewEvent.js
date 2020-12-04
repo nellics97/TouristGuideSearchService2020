@@ -57,7 +57,7 @@ const NewEvent = () => {
 
     try {
       await sendRequest(
-        "http://localhost:5000/api/events",
+        process.env.REACT_APP_BACKEND_URL + "/events",
         "POST",
         JSON.stringify({
           guide: guideValue,

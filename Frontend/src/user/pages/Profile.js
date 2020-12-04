@@ -26,7 +26,7 @@ const Profile = (props) => {
     const fetchUserData = async () => {
       try {
         const responseData = await sendRequest(
-          `http://localhost:5000/api/users/${userId}`
+          process.env.REACT_APP_BACKEND_URL + `/users/${userId}`
         );
         setLoadedUser(responseData.user);
       } catch (err) {}
@@ -59,7 +59,7 @@ const Profile = (props) => {
       try {
         console.log(formState.inputs.text.value);
         await sendRequest(
-          `http://localhost:5000/api/reviews/${userId}`,
+          process.env.REACT_APP_BACKEND_URL + `/reviews/${userId}`,
           "POST",
           JSON.stringify({
             author: auth.userId,
@@ -84,7 +84,11 @@ const Profile = (props) => {
       )}
       <div className="profile_picture">
         {!isLoading && loadedUser && (
-          <Avatar image={`http://localhost:5000/${loadedUser.image}`} />
+          <Avatar
+            image={
+              process.env.REACT_APP_BACKEND_URL_PICS + `/${loadedUser.image}`
+            }
+          />
         )}
       </div>
       <br></br>

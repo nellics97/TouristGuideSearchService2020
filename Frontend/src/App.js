@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -6,19 +6,30 @@ import {
   Switch,
 } from "react-router-dom";
 
-import Users from "./user/pages/Users";
-import NewEvent from "./events/pages/NewEvent";
-import Events from "./events/pages/Events";
-import UpdateEvent from "./events/pages/UpdateEvent";
-import EventProfile from "./events/pages/EventProfile";
-import Profile from "./user/pages/Profile";
-import UpdateProfile from "./user/pages/UpdateProfile";
-import Chat from "./chat/Chat";
-import Auth from "./user/pages/Auth";
+//import Users from "./user/pages/Users";
+//import NewEvent from "./events/pages/NewEvent";
+//import Events from "./events/pages/Events";
+//import UpdateEvent from "./events/pages/UpdateEvent";
+//import EventProfile from "./events/pages/EventProfile";
+//import Profile from "./user/pages/Profile";
+//import UpdateProfile from "./user/pages/UpdateProfile";
+//import Chat from "./chat/Chat";
+//import Auth from "./user/pages/Auth";
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
 import { AuthContext } from "./shared/context/auth-context";
 import { useAuth } from "./shared/hooks/auth-hook";
 import UserEvents from "./events/pages/UserEvents";
+import LoadingSpinner from "./shared/components/UIElements/LoadingSpinner";
+
+const Users = React.lazy(() => import("./user/pages/Users"));
+const NewEvent = React.lazy(() => import("./events/pages/NewEvent"));
+const Events = React.lazy(() => import("./events/pages/Events"));
+const UpdateEvent = React.lazy(() => import("./events/pages/UpdateEvent"));
+const EventProfile = React.lazy(() => import("./events/pages/EventProfile"));
+const Profile = React.lazy(() => import("./user/pages/Profile"));
+const UpdateProfile = React.lazy(() => import("./user/pages/UpdateProfile"));
+const Chat = React.lazy(() => import("./chat/Chat"));
+const Auth = React.lazy(() => import("./user/pages/Auth"));
 
 function App() {
   const { token, login, logout, userId } = useAuth();
@@ -90,7 +101,17 @@ function App() {
     >
       <Router>
         <MainNavigation />
-        <main>{routes}</main>
+        <main>
+          <Suspense
+            fallback={
+              <div className="center">
+                <LoadingSpinner />
+              </div>
+            }
+          >
+            {routes}
+          </Suspense>
+        </main>
       </Router>
     </AuthContext.Provider>
   );

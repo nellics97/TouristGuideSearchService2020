@@ -23,7 +23,7 @@ const EventProfile = (props) => {
     const fetchEvent = async () => {
       try {
         const responseData = await sendRequest(
-          `http://localhost:5000/api/events/${eventId}`
+          process.env.REACT_APP_BACKEND_URL + `/events/${eventId}`
         );
         setLoadedEvent(responseData.event);
       } catch (err) {}
@@ -43,7 +43,7 @@ const EventProfile = (props) => {
     setShowConfirmModal(false);
     try {
       await sendRequest(
-        `http://localhost:5000/api/events/${eventId}`,
+        process.env.REACT_APP_BACKEND_URL + `/events/${eventId}`,
         "DELETE",
         null,
         { Authorization: "Bearer " + auth.token }
@@ -57,7 +57,7 @@ const EventProfile = (props) => {
     event.preventDefault();
     try {
       await sendRequest(
-        `http://localhost:5000/api/events/${eventId}/addattendee`,
+        process.env.REACT_APP_BACKEND_URL + `/events/${eventId}/addattendee`,
         "PATCH",
         JSON.stringify({
           participant: auth.userId,
@@ -77,7 +77,7 @@ const EventProfile = (props) => {
     const fetchUserData = async () => {
       try {
         const responseData = await sendRequest(
-          `http://localhost:5000/api/users/${loadedEvent.creator}`
+          process.env.REACT_APP_BACKEND_URL + `/users/${loadedEvent.creator}`
         );
         setLoadedUser(responseData.user);
       } catch (err) {}

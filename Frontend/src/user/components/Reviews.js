@@ -15,7 +15,7 @@ const Reviews = () => {
     const fetchReviews = async () => {
       try {
         const responseData = await sendRequest(
-          `http://localhost:5000/api/reviews/${userId}`
+          process.env.REACT_APP_BACKEND_URL + `/reviews/${userId}`
         );
         setLoadedReviews(responseData.reviews);
       } catch (err) {}

@@ -55,7 +55,7 @@ const UpdateEvent = () => {
     const fetchEvent = async () => {
       try {
         const responseData = await sendRequest(
-          `http://localhost:5000/api/events/${eventId}`
+          process.env.REACT_APP_BACKEND_URL + `/events/${eventId}`
         );
         setLoadedEvent(responseData.event);
         setFormData(
@@ -100,7 +100,7 @@ const UpdateEvent = () => {
     event.preventDefault();
     try {
       await sendRequest(
-        `http://localhost:5000/api/events/${eventId}/update`,
+        process.env.REACT_APP_BACKEND_URL + `/events/${eventId}/update`,
         "PATCH",
         JSON.stringify({
           guide: guideValue,
@@ -117,7 +117,7 @@ const UpdateEvent = () => {
         }
       );
       console.log(sendRequest);
-      history.push("/"); //majd az event oldalara iranyitsd
+      history.push("/");
     } catch (err) {}
   };
 

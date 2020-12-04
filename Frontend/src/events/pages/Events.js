@@ -25,7 +25,7 @@ const Events = () => {
     const fetchEvents = async () => {
       try {
         const responseData = await sendRequest(
-          "http://localhost:5000/api/events"
+          process.env.REACT_APP_BACKEND_URL + "/events"
         );
         setLoadedEvents(responseData.events);
       } catch (err) {}
@@ -46,7 +46,7 @@ const Events = () => {
       if (!isLoading && loadedEvents) {
         try {
           const responseData = await sendRequest(
-            `http://localhost:5000/api/events/filter`,
+            process.env.REACT_APP_BACKEND_URL + `/events/filter`,
             "POST",
             JSON.stringify({
               guide: guideValue,

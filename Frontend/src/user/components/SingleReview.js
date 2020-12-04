@@ -26,7 +26,7 @@ const EventItem = (props) => {
     console.log(props.text);
     try {
       await sendRequest(
-        `http://localhost:5000/api/reviews/${props.id}`,
+        process.env.REACT_APP_BACKEND_URL + `/reviews/${props.id}`,
         "DELETE",
         null,
         { Authorization: "Bearer " + auth.token }
@@ -39,7 +39,7 @@ const EventItem = (props) => {
     const fetchUserData = async () => {
       try {
         const responseData = await sendRequest(
-          `http://localhost:5000/api/users/${props.author}`
+          process.env.REACT_APP_BACKEND_URL + `/users/${props.author}`
         );
         setLoadedAuthor(responseData.user);
       } catch (err) {}

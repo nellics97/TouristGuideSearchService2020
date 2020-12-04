@@ -46,7 +46,7 @@ const UpdateProfile = () => {
     const fetchUser = async () => {
       try {
         const responseData = await sendRequest(
-          `http://localhost:5000/api/users/${userId}`
+          process.env.REACT_APP_BACKEND_URL + `/users/${userId}`
         );
         setLoadedUser(responseData.user);
         setFormData(
@@ -85,7 +85,7 @@ const UpdateProfile = () => {
       //formData.set("description", formState.inputs.description.value);
       //formData.append("image", formState.inputs.image.value);
       await sendRequest(
-        `http://localhost:5000/api/users/${userId}/update`,
+        process.env.REACT_APP_BACKEND_URL + `/users/${userId}/update`,
         "POST",
         JSON.stringify({
           name: formState.inputs.name.value,
