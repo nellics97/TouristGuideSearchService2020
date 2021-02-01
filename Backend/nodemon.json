@@ -1,0 +1,9 @@
+{
+  "env": {
+    "DB_USER": "nelli",
+    "DB_PASSWORD": "ElNeFelejtsem123",
+    "DB_NAME": "testdb",
+    "SENDGRID_API_KEY": "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",
+    "JWT_KEY": "supersecret_dont_share"
+  }
+}

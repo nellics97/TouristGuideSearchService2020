@@ -77,7 +77,7 @@ const UpdateProfile = () => {
 
   const eventUpdateSubmitHandler = async (event) => {
     event.preventDefault();
-    getBase64();
+    //getBase64();
     try {
       //const formData = new FormData();
       //formData.set("name", formState.inputs.name.value);
@@ -99,14 +99,13 @@ const UpdateProfile = () => {
           "Content-Type": "application/json",
         }
       );
-      console.log(imageData);
       history.push("/");
     } catch (err) {}
   };
 
-  useEffect(() => {
-    console.log(imageData);
-  }, [imageData]);
+  //useEffect(() => {
+  //  console.log(imageData);
+  //}, [imageData]);
 
   if (isLoading) {
     return (
@@ -126,18 +125,18 @@ const UpdateProfile = () => {
     );
   }
 
-  function getBase64() {
-    let img = formState.inputs.image.value;
-    var reader = new FileReader();
-    reader.readAsDataURL(img);
-    reader.onload = function () {
-      setImageData(reader.result);
-      //console.log(reader.result);
-    };
-    reader.onerror = function (error) {
-      console.log("Error: ", error);
-    };
-  }
+  //function getBase64() {
+  //  let img = formState.inputs.image.value;
+  //  var reader = new FileReader();
+  //  reader.readAsDataURL(img);
+  //  reader.onload = function () {
+  //    setImageData(reader.result);
+  //    //console.log(reader.result);
+  //  };
+  //  reader.onerror = function (error) {
+  //    console.log("Error: ", error);
+  //  };
+  //}
 
   return (
     <React.Fragment>

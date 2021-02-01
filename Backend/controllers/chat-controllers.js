@@ -102,6 +102,12 @@ exports.handleChatWs = async (socket, req) => {
   const eventId = req.params.eid;
   const userId = req.userData.userId;
 
+  console.log("chat", req);
+
+  socket.on("open", (ev) => {
+    console.log(ev);
+  });
+
   try {
     const messages = (
       await require("../models/message").find({ event: eventId })
@@ -109,20 +115,22 @@ exports.handleChatWs = async (socket, req) => {
 
     socket.send(JSON.stringify(messages));
   } catch (e) {
-    socket.close();
+    console.log(`send`, e);
+    socket.close(420);
   }
 
   socket.on("message", function (msg) {
+    console.log("message", msg);
     try {
       msg = JSON.parse(msg);
       MessageEvents.addMessage(eventId, {
         ...msg,
         author: userId,
-        time: new Date(),
+        time: new Date().toLocaleDateString(),
       });
     } catch (e) {
       console.error(e);
-      socket.close();
+      socket.close(420);
     }
   });
 
@@ -133,6 +141,7 @@ exports.handleChatWs = async (socket, req) => {
   MessageEvents.emitter.on(`message:${eventId}`, listener);
 
   socket.on("close", () => {
+    console.log(`close:  message:${eventId}`);
     MessageEvents.emitter.off(`message:${eventId}`, listener);
   });
 

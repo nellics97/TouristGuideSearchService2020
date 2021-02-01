@@ -29,10 +29,20 @@ const Chat = () => {
 
   const connectWs = () => {
     const ws = new WebSocket(
-      `ws://localhost:5000/api/chat/${eventId}?token=${auth.token}`
+      `${process.env.REACT_APP_BACKEND_URL.replace(
+        "http",
+        "ws"
+      )}/chat/${eventId}?token=${auth.token}`
     );
 
+    ws.onopen = (ev) => {
+      console.warn("open", ev);
+
+      setWs(ws);
+    };
+
     ws.onmessage = ({ data }) => {
+      console.warn("msg", data);
       const newMessages = JSON.parse(data);
 
       setLoadedMessages((loadedMessages) => [
@@ -42,15 +52,15 @@ const Chat = () => {
     };
 
     ws.onclose = (event) => {
+      console.warn("close", event);
       setWs(undefined);
       connectWs();
     };
 
     ws.onerror = (event) => {
       // panic
+      console.error(event);
     };
-
-    setWs(ws);
   };
 
   useEffect(connectWs, []);
